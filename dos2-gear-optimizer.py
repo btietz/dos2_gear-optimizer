@@ -1,5 +1,6 @@
 import copy
 import hashlib
+import random
 import sys
 import time
 
@@ -176,18 +177,21 @@ available_gear = [
 
 best_solutions = []
 best_solutions_sigs = set()
+max_best_solutions = 40
 already_evaluated_sig_hash_num_bits = 36
 already_evaluated_sig_hash_mask = (1 << already_evaluated_sig_hash_num_bits) - 1
 already_evaluated_sig_hash_num_bytes = 1 << (already_evaluated_sig_hash_num_bits - 3)
 already_evaluated_bitmap = bytearray(already_evaluated_sig_hash_num_bytes)
 start_time = time.time()
 debug_depth = 0
+termination_factor = 0.0
 total_permutations = 0
 
 required_attrs = set(["strength", "intelligence", "finesse"])
 
 def main():
     global debug_depth
+    global termination_factor
     global characters
     global available_gear
     global best_solutions
@@ -210,6 +214,12 @@ def main():
                 name = character["name"]
                 raise KeyError(f"{name} missing {key}") 
 
+    num_items = 0
+    for type_group in available_gear:
+        num_items += len(type_group["avail"])
+    assert num_items > 0
+    termination_factor = calculate_termination_factor(num_items)
+
     pin_type_i = 0
     pin_type_i_num_constraints = 0
     pin_avail_i = False
@@ -230,8 +240,60 @@ def main():
             print(f"pin_type_i={pin_type_i}, pin_avail_i={pin_avail_i} type_name={type_name}, "
                   f"num_constraints={num_constraints}")
 
-    explore_all(characters, available_gear, 0, pin_type_i, pin_avail_i)
+    explore_all(characters, available_gear, 0, pin_type_i, pin_avail_i, True)
 
+    for sweep_pass_limited in [True, False]:
+        best_limited_solutions = copy.deepcopy(best_solutions)
+        for solution_i in range(0, len(best_limited_solutions)):
+            solution = best_limited_solutions[solution_i]
+            available_gear_after_assignments = copy.deepcopy(available_gear)
+            for character in solution:
+                for key in character:
+                    if key in set(["name", "physical", "magic"]) or key in required_attrs:
+                        continue
+                    assigned_item_type = key
+                    assigned_item = character[key]
+                    if assigned_item == None:
+                        continue
+                    assigned_item_name = assigned_item["name"]
+                    found_and_removed = False
+                    for type_group in available_gear_after_assignments:
+                        if type_group["type"] == assigned_item_type:
+                            avail = type_group["avail"]
+                            for i in range(0, len(avail)):
+                                avail_item = avail[i]
+                                if avail_item["name"] == assigned_item_name:
+                                    avail.pop(i)
+                                    found_and_removed = True
+                                    break
+                        if found_and_removed:
+                            break
+                    if not found_and_removed:
+                        raise KeyError(f"item multiply assigned: {assigned_item_type}, {assigned_item_name}")
+
+            all_slots_filled = True
+            for character in solution:
+                for type_group in available_gear_after_assignments:
+                    item_type = type_group["type"]
+                    if not item_type in character:
+                        for item in type_group["avail"]:
+                            item_name = item["name"]
+                            attr_minimum_met = True
+                            for attr in required_attrs:
+                                if attr in item:
+                                    if character[attr] < item[attr]:
+                                        attr_minimum_met = False
+                            if attr_minimum_met:
+                                character_name = character["name"]
+                                print(f"character {character_name} could take {item_type}: {item_name}")
+                                all_slots_filled = False
+
+            if not all_slots_filled:
+                print(f"retrying limited solution {solution_i}")
+                print(f"remaining gear: {available_gear_after_assignments}")
+                explore_all(solution, available_gear_after_assignments, 0, None, None, sweep_pass_limited)
+
+    remove_suboptimal_solutions()
     sort_best_solutions_min_variance_first()
 
     for i in range(0, min(len(best_solutions), 8)):
@@ -242,7 +304,7 @@ def main():
             print(character["physical"])
             print(character["magic"])
             for key in character:
-                if key in set({["name", "physical", "magic", "variance_sum_of_squares"]}) or key in required_attrs:
+                if key in set(["name", "physical", "magic", "variance_sum_of_squares"]) or key in required_attrs:
                     continue
                 item_type = key
                 item = character[key]
@@ -254,11 +316,19 @@ def main():
                 print(f"{item_type}: {item_name}, {physical}, {magic}")
             print("\n")
 
-def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i):
+def calculate_termination_factor(N):
+    survival_prob = 24.25 * (N ** -1.917)
+    
+    T_prob = 1.0 - survival_prob
+
+    return min(0.99999, max(0.0, T_prob))
+    
+def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allow_termination):
     global start_time
     global already_evaluated_bitmap
     global total_permutations
     global debug_depth
+    global termination_factor
 
     type_count = len(available_gear)
     type_i = 0
@@ -306,6 +376,9 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i):
                 available_gear.pop(type_i)
 
             for character_i in range(0, len(characters)):
+                if depth > 1 and termination_factor > 0.0:
+                    if allow_termination and random.random() <= termination_factor:
+                        continue
                 if depth <= debug_depth:
                     elapsed_time = time.time() - start_time
                     debug_s = f"d={depth} c={character_i} t={elapsed_time:.6f} "
@@ -342,7 +415,7 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i):
 
                         if not is_dead_branch(character, available_gear):
                             evaluate(characters, sig)
-                            explore_all(characters, available_gear, depth + 1, None, False)
+                            explore_all(characters, available_gear, depth + 1, None, False, allow_termination)
 
                     del character[type_name]
                     character["physical"] -= item["physical"]
@@ -403,14 +476,15 @@ def evaluate(characters, sig):
     elapsed_time = time.time() - start_time
 
     if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
-        best_solutions = [copy.deepcopy(characters)]
-        best_solutions_sigs.clear()
+        limit_best_solutions(max_best_solutions - 1)
+        best_solutions.insert(0, copy.deepcopy(characters))
         best_solutions_sigs.add(sig)
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         print(f"{best_solutions}")
         return
     if new_min == existing_min and new_average == existing_average:
-        best_solutions.append(copy.deepcopy(characters))
+        limit_best_solutions(max_best_solutions - 1)
+        best_solutions.insert(0, copy.deepcopy(characters))
         best_solutions_sigs.add(sig)
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}, count: {len(best_solutions)}")
         return
@@ -444,6 +518,21 @@ def calculate_average(characters):
         result += character["physical"]
         result += character["magic"]
     return result / (len(characters) * 2)
+
+def limit_best_solutions(n):
+    global best_solutions
+
+    if len(best_solutions) > n:
+        assert len(best_solutions) == n + 1
+        i = random.randint(1, n)
+
+        # Remove a random one
+        removed = best_solutions.pop(i)
+        best_solutions_sigs.remove(characters_sig(removed))
+
+        # Also remove the oldest (worst) one
+        removed = best_solutions.pop()
+        best_solutions_sigs.remove(characters_sig(removed))
 
 def is_dead_branch(character, available_gear):
     global best_solutions
@@ -479,6 +568,15 @@ def is_dead_branch(character, available_gear):
 
     return False
 
+def remove_suboptimal_solutions():
+    best_min = calculate_min(best_solutions[0])
+    best_average = calculate_average(best_solutions[0])
+    while len(best_solutions) > 1:
+        if calculate_min(best_solutions[-1]) < best_min or calculate_average(best_solutions[-1]) < best_average:
+            best_solutions.pop()
+        else:
+            return
+
 def sort_best_solutions_min_variance_first():
     global best_solutions
 
@@ -500,5 +598,5 @@ def sort_best_solutions_min_variance_first():
                                                   + p_m_diff_sum_of_squares)
 
     best_solutions.sort(key=lambda s: s[0]["variance_sum_of_squares"])
-
+        
 main()
