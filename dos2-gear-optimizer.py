@@ -5,67 +5,109 @@ import time
 
 characters = [
     {"name": "Brian",
-     "physical": 39,
-     "magic": 18,
+     "physical": 43,
+     "magic": 35,
+     "strength": 13,
+     "intelligence": 10,
+     "finesse": 10,
+     "chest": None,
      "gloves": None,
-     "belt": None,
-     "ring": None,
     },
-    {"name": "The Red Prince",
-     "physical": 17,
-     "magic": 3,
+    {"name": "Beast",
+     "physical": 16,
+     "magic": 4,
+     "strength": 12,
+     "intelligence": 12,
+     "finesse": 10,
+     "chest": None,
     },
-    {"name": "Sebille",
-     "physical": 12,
-     "magic": 10,
-     "gloves": None,
+    {"name": "Lohse",
+     "physical": 0,
+     "magic": 0,
+     "strength": 10,
+     "intelligence": 13,
+     "finesse": 10,
     },
     {"name": "Fane",
-     "physical": 11,
-     "magic": 10,
-     "ring": None,
+     "physical": 0,
+     "magic": 8,
+     "strength": 10,
+     "intelligence": 14,
+     "finesse": 10,
     },
 ]
 
 available_gear = [
-    {"type": "shoes",
+    {"type": "helmet",
      "avail": [
-        {"name": "MS",
-         "physical": 1,
-         "magic": 6,
+        {"name": "HoP",
+         "physical": 10,
+         "magic": 3,
+         "strength": 11,
         },
-        {"name": "BSB",
+        {"name": "M",
+         "physical": 3,
+         "magic": 12,
+         "intelligence": 11,
+        },
+        {"name": "SH",
          "physical": 4,
          "magic": 1,
         },
-        {"name": "TS2",
-         "physical": 2,
-         "magic": 0,
+        {"name": "LH",
+         "physical": 3,
+         "magic": 2,
         },
-        {"name": "TS1",
-         "physical": 1,
-         "magic": 0,
+     ]
+    },
+    {"type": "chest",
+     "avail": [
+        {"name": "MagM",
+         "physical": 3,
+         "magic": 18,
+         "intelligence": 11,
+        },
+        {"name": "MenM",
+         "physical": 4,
+         "magic": 16,
+         "intelligence": 11,
+        },
+        {"name": "SA",
+         "physical": 8,
+         "magic": 6,
+        },
+        {"name": "SSA",
+         "physical": 12,
+         "magic": 3,
         },
      ]
     },
     {"type": "gloves",
      "avail": [
+        {"name": "SSG",
+         "physical": 8,
+         "magic": 2,
+         "strength": 11,
+        },
+        {"name": "MLG",
+         "physical": 4,
+         "magic": 3,
+        },
         {"name": "WM",
          "physical": 2,
          "magic": 7,
         },
-        {"name": "MM",
-         "physical": 2,
-         "magic": 0,
-        },
      ]
     },
-
     {"type": "pants",
      "avail": [
         {"name": "WL",
          "physical": 3,
          "magic": 9,
+        },
+        {"name": "RSP",
+         "physical": 8,
+         "magic": 2,
         },
         {"name": "WP",
          "physical": 1,
@@ -75,15 +117,19 @@ available_gear = [
          "physical": 3,
          "magic": 0,
         },
-        {"name": "FT",
-         "physical": 3,
-         "magic": 0,
-        },
      ]
     },
     {"type": "belt",
      "avail": [
-        {"name": "RB",
+        {"name": "B",
+         "physical": 6,
+         "magic": 0,
+        },
+        {"name": "B",
+         "physical": 6,
+         "magic": 0,
+        },
+        {"name": "B",
          "physical": 6,
          "magic": 0,
         },
@@ -91,17 +137,38 @@ available_gear = [
     },
     {"type": "ring",
      "avail": [
+        {"name": "AR",
+         "physical": 0,
+         "magic": 8,
+        },
         {"name": "DR",
          "physical": 0,
          "magic": 6,
         },
+        {"name": "JR",
+         "physical": 0,
+         "magic": 5,
+        },
      ]
     },
-    {"type": "necklace",
+    {"type": "boots",
      "avail": [
-        {"name": "SN",
-         "physical": 0,
-         "magic": 8,
+        {"name": "MSandal",
+         "physical": 3,
+         "magic": 9,
+         "intelligence": 11,
+        },
+        {"name": "MShoe",
+         "physical": 1,
+         "magic": 6,
+        },
+        {"name": "BSB",
+         "physical": 4,
+         "magic": 1,
+        },
+        {"name": "RB",
+         "physical": 4,
+         "magic": 0,
         },
      ]
     },
@@ -116,6 +183,8 @@ already_evaluated_bitmap = bytearray(already_evaluated_sig_hash_num_bytes)
 start_time = time.time()
 debug_depth = 0
 total_permutations = 0
+
+required_attrs = set(["strength", "intelligence", "finesse"])
 
 def main():
     global debug_depth
@@ -134,6 +203,12 @@ def main():
             continue
 
         raise KeyError(f"invalid argument {argv_copy[0]}") 
+
+    for character in characters:
+        for key in required_attrs:
+            if not key in character:
+                name = character["name"]
+                raise KeyError(f"{name} missing {key}") 
 
     pin_type_i = 0
     pin_type_i_num_constraints = 0
@@ -167,7 +242,7 @@ def main():
             print(character["physical"])
             print(character["magic"])
             for key in character:
-                if key == "name" or key == "physical" or key == "magic" or key == "variance_sum_of_squares":
+                if key in set({["name", "physical", "magic", "variance_sum_of_squares"]}) or key in required_attrs:
                     continue
                 item_type = key
                 item = character[key]
@@ -246,6 +321,14 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i):
 
                 character = characters[character_i]
                 if not type_name in character:
+                    attr_minimum_met = True
+                    for attr in required_attrs:
+                        if attr in item:
+                            if character[attr] < item[attr]:
+                                attr_minimum_met = False
+                    if not attr_minimum_met:
+                        continue
+
                     character[type_name] = item
                     character["physical"] += item["physical"]
                     character["magic"] += item["magic"]
@@ -281,7 +364,7 @@ def characters_sig(characters):
         keys = list(character)
         keys.sort()
         for key in keys:
-            if key == "name" or key == "physical" or key == "magic":
+            if key == "name" or key == "physical" or key == "magic" or key in required_attrs:
                 continue
             item = character[key]
             if item is None:
