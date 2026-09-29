@@ -35,6 +35,8 @@ characters = [
      "strength": 10,
      "intelligence": 14,
      "finesse": 10,
+     "ring1": None,
+     "ring2": None
     },
 ]
 
@@ -177,7 +179,8 @@ available_gear = [
 
 best_solutions = []
 best_solutions_sigs = set()
-max_best_solutions = 40
+max_best_solutions = 30
+num_items = 0
 already_evaluated_sig_hash_num_bits = 36
 already_evaluated_sig_hash_mask = (1 << already_evaluated_sig_hash_num_bits) - 1
 already_evaluated_sig_hash_num_bytes = 1 << (already_evaluated_sig_hash_num_bits - 3)
@@ -195,6 +198,7 @@ def main():
     global characters
     global available_gear
     global best_solutions
+    global num_items
 
     argv_copy = sys.argv[1:]
 
@@ -228,7 +232,7 @@ def main():
         type_name = type_group["type"]
         num_constraints = 0
         for character in characters:
-            if type_name in character:
+            if type_name in character or (type_name == "ring" and ("ring1" in character or "ring2" in character)):
                 num_constraints += 1
         type_group_can_pin_avail_i = (num_constraints + len(type_group["avail"]) <= len(characters))
 
@@ -240,7 +244,12 @@ def main():
             print(f"pin_type_i={pin_type_i}, pin_avail_i={pin_avail_i} type_name={type_name}, "
                   f"num_constraints={num_constraints}")
 
-    explore_all(characters, available_gear, 0, pin_type_i, pin_avail_i, True)
+    i = 1
+    outer_exploration_max = 8
+    while i <= outer_exploration_max:
+        print(f"\nLIMITED OUTER EXPLORATION #{i} of {outer_exploration_max}\n")
+        explore_all(characters, available_gear, 0, pin_type_i, pin_avail_i, True)
+        i += 1
 
     for sweep_pass_limited in [True, False]:
         best_limited_solutions = copy.deepcopy(best_solutions)
@@ -255,6 +264,8 @@ def main():
                     assigned_item = character[key]
                     if assigned_item == None:
                         continue
+                    if assigned_item_type == "ring1" or assigned_item_type == "ring2":
+                        assigned_item_type = "ring"
                     assigned_item_name = assigned_item["name"]
                     found_and_removed = False
                     for type_group in available_gear_after_assignments:
@@ -275,7 +286,8 @@ def main():
             for character in solution:
                 for type_group in available_gear_after_assignments:
                     item_type = type_group["type"]
-                    if not item_type in character:
+                    if not (item_type in character or (item_type == "ring" and
+                                                       ("ring1" in character and "ring2" in character))):
                         for item in type_group["avail"]:
                             item_name = item["name"]
                             attr_minimum_met = True
@@ -289,8 +301,18 @@ def main():
                                 all_slots_filled = False
 
             if not all_slots_filled:
-                print(f"retrying limited solution {solution_i}")
-                print(f"remaining gear: {available_gear_after_assignments}")
+                num_items = 0
+                for type_group in available_gear_after_assignments:
+                    num_items += len(type_group["avail"])
+                assert num_items > 0
+                termination_factor = calculate_termination_factor(num_items)
+
+                if sweep_pass_limited:
+                    print(f"\nRETRYING SOLUTION {solution_i+1} of {len(best_limited_solutions)}\n")
+                else:
+                    print(f"\nRETRYING SOLUTION {solution_i+1} of {len(best_limited_solutions)}, unlimited\n")
+                print(f"remaining gear: {available_gear_after_assignments}\n")
+
                 explore_all(solution, available_gear_after_assignments, 0, None, None, sweep_pass_limited)
 
     remove_suboptimal_solutions()
@@ -326,6 +348,7 @@ def calculate_termination_factor(N):
 def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allow_termination):
     global start_time
     global already_evaluated_bitmap
+    global num_items
     global total_permutations
     global debug_depth
     global termination_factor
@@ -393,7 +416,8 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allo
                     print(debug_s)
 
                 character = characters[character_i]
-                if not type_name in character:
+                if not (type_name in character or (type_name == "ring" and
+                                                   "ring1" in character and "ring2" in character)):
                     attr_minimum_met = True
                     for attr in required_attrs:
                         if attr in item:
@@ -401,6 +425,12 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allo
                                 attr_minimum_met = False
                     if not attr_minimum_met:
                         continue
+
+                    if type_name == "ring":
+                        if "ring1" in character:
+                            type_name = "ring2"
+                        else:
+                            type_name = "ring1"
 
                     character[type_name] = item
                     character["physical"] += item["physical"]
@@ -411,7 +441,8 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allo
                     sig_mask = 1 << (sig & 7)
 
                     if not (already_evaluated_bitmap[sig_byte_index] & sig_mask):
-                        already_evaluated_bitmap[sig_byte_index] |= sig_mask
+                        if depth > num_items / 4 or not allow_termination:
+                            already_evaluated_bitmap[sig_byte_index] |= sig_mask
 
                         if not is_dead_branch(character, available_gear):
                             evaluate(characters, sig)
@@ -486,7 +517,7 @@ def evaluate(characters, sig):
         limit_best_solutions(max_best_solutions - 1)
         best_solutions.insert(0, copy.deepcopy(characters))
         best_solutions_sigs.add(sig)
-        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}, count: {len(best_solutions)}")
+        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         return
 
 def calculate_min(characters):
@@ -545,7 +576,8 @@ def is_dead_branch(character, available_gear):
     for avail_type in available_gear:
         avail_type_name = avail_type["type"]
 
-        if avail_type_name in character:
+        if avail_type_name in character or (avail_type_name == "ring" and
+                                            "ring1" in character and "ring2" in character):
             continue
 
         best_add_physical = 0
