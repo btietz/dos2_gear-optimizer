@@ -301,6 +301,12 @@ def main():
                                 all_slots_filled = False
 
             if not all_slots_filled:
+                num_items = 0
+                for type_group in available_gear_after_assignments:
+                    num_items += len(type_group["avail"])
+                assert num_items > 0
+                termination_factor = calculate_termination_factor(num_items)
+
                 if sweep_pass_limited:
                     print(f"\nRETRYING SOLUTION {solution_i+1} of {len(best_limited_solutions)}\n")
                 else:
@@ -435,14 +441,12 @@ def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allo
                     sig_mask = 1 << (sig & 7)
 
                     if not (already_evaluated_bitmap[sig_byte_index] & sig_mask):
-                        if depth > num_items / 5 or not allow_termination:
+                        if depth > num_items / 4 or not allow_termination:
                             already_evaluated_bitmap[sig_byte_index] |= sig_mask
 
                         if not is_dead_branch(character, available_gear):
                             evaluate(characters, sig)
                             explore_all(characters, available_gear, depth + 1, None, False, allow_termination)
-                        else:
-                            already_evaluated_bitmap[sig_byte_index] |= sig_mask
 
                     del character[type_name]
                     character["physical"] -= item["physical"]
@@ -481,41 +485,31 @@ def evaluate(characters, sig):
     global start_time
     global best_solutions
     global best_solutions_sigs
-    global already_evaluated_bitmap
     global total_permutations
 
     total_permutations += 1
 
-    sig_byte_index = sig >> 3
-    sig_mask = 1 << (sig & 7)
+    new_min = calculate_min(characters)
+    new_average = calculate_average(characters)
 
     if len(best_solutions) == 0:
         best_solutions = [copy.deepcopy(characters)]
         best_solutions_sigs.add(sig)
-        already_evaluated_bitmap[sig_byte_index] |= sig_mask
-
-        new_min = calculate_min(characters)
-        new_average = calculate_average(characters)
-
         print(f"min: {new_min}, average: {new_average}")
         print(f"{best_solutions}")
         return
 
-    if already_evaluated_bitmap[sig_byte_index] & sig_mask:
-        return
-    already_evaluated_bitmap[sig_byte_index] |= sig_mask
-
-    new_min = calculate_min(characters)
-    new_average = calculate_average(characters)
+    if sig in best_solutions_sigs:
+        return  # already there
 
     existing_min = calculate_min(best_solutions[0])
     existing_average = calculate_average(best_solutions[0])
+    elapsed_time = time.time() - start_time
 
     if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
         limit_best_solutions(max_best_solutions - 1)
         best_solutions.insert(0, copy.deepcopy(characters))
         best_solutions_sigs.add(sig)
-        elapsed_time = time.time() - start_time
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         print(f"{best_solutions}")
         return
@@ -523,7 +517,6 @@ def evaluate(characters, sig):
         limit_best_solutions(max_best_solutions - 1)
         best_solutions.insert(0, copy.deepcopy(characters))
         best_solutions_sigs.add(sig)
-        elapsed_time = time.time() - start_time
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         return
 
