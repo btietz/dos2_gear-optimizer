@@ -9,8 +9,8 @@ characters = [
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 46,
-     "magic": 25,
+     "physical": 47,
+     "magic": 26,
 
      "chest": None,
     },
@@ -19,8 +19,8 @@ characters = [
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 24,
-     "magic": 6,
+     "physical": 64,
+     "magic": 32,
 
      "chest": None,
     },
@@ -30,9 +30,7 @@ characters = [
      "intelligence": 14,
 
      "physical": 1,
-     "magic": 10,
-
-     "necklace": None,
+     "magic": 4,
     },
     {"name": "Fane",
      "strength": 10,
@@ -183,9 +181,15 @@ available_gear = [
          "physical": 0,
          "magic": 8,
         },
+        {"name": "SC",
+         "physical": 0,
+         "magic": 6,
+         "intelligence": 11,
+        },
      ]
     },
 ]
+
 
 required_attrs = set(["strength", "intelligence", "finesse"])
 
@@ -353,7 +357,7 @@ def apply_all_combinations(type_group_i, characters, depth):
             elapsed_time = time.time() - start_time
             print(f"d={depth} n={total_permutations}  t={elapsed_time:.8f} applying combination {combination}")
 
-        if type_group_i < len(available_gear) - 1:
+        if type_group_i < len(available_gear) - 1 and not is_dead_branch(type_group_i + 1, characters):
             apply_all_combinations(type_group_i + 1, characters, depth + 1)
         else:
             evaluate(characters)
@@ -372,6 +376,44 @@ def apply_all_combinations(type_group_i, characters, depth):
                     character["magic"] -= assigned_item["magic"]
                     found = True
             assert found
+
+def is_dead_branch(min_type_group_i, characters):
+    global best_solutions
+
+    if len(best_solutions) == 0:
+        return False
+
+    best_min = calculate_min(best_solutions[0])
+
+    for character in characters:
+        character_name = character["name"]
+        max_character_physical = character["physical"]
+        max_character_magic = character["magic"]
+        type_group_i = min_type_group_i
+        while type_group_i < len(available_gear):
+            type_group = available_gear[type_group_i]
+            combinations = type_group["combinations"]
+            best_type_physical = 0
+            best_type_magic = 0
+            for combination in combinations:
+                for assignment in combination:
+                    separator_i = assignment.find(" : ")
+                    if assignment[:separator_i] == character_name:
+                        assigned_item = combination[assignment]
+                        if best_type_physical < assigned_item["physical"]:
+                            best_type_physical = assigned_item["physical"]
+                        if best_type_magic < assigned_item["magic"]:
+                            best_type_magic = assigned_item["magic"]
+            max_character_physical += best_type_physical
+            max_character_magic += best_type_magic
+            type_group_i += 1
+
+        if max_character_physical < best_min:
+            return True
+        if max_character_magic < best_min:
+            return True
+
+    return False
 
 def evaluate(characters):
     global start_time
