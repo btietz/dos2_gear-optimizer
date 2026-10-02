@@ -1,57 +1,63 @@
 import copy
-import hashlib
 import random
 import sys
 import time
 
 characters = [
     {"name": "Brian",
-     "physical": 43,
-     "magic": 35,
      "strength": 13,
+     "finesse": 10,
      "intelligence": 10,
-     "finesse": 10,
+
+     "physical": 46,
+     "magic": 25,
+
      "chest": None,
-     "gloves": None,
     },
-    {"name": "Beast",
-     "physical": 16,
-     "magic": 4,
+    {"name": "The Red Prince",
      "strength": 12,
-     "intelligence": 12,
      "finesse": 10,
+     "intelligence": 10,
+
+     "physical": 24,
+     "magic": 6,
+
      "chest": None,
     },
     {"name": "Lohse",
-     "physical": 0,
-     "magic": 0,
      "strength": 10,
-     "intelligence": 13,
      "finesse": 10,
+     "intelligence": 14,
+
+     "physical": 1,
+     "magic": 10,
+
+     "necklace": None,
     },
     {"name": "Fane",
-     "physical": 0,
-     "magic": 8,
      "strength": 10,
-     "intelligence": 14,
      "finesse": 10,
+     "intelligence": 14,
+
+     "physical": 2,
+     "magic": 9,
+
      "ring1": None,
-     "ring2": None
     },
 ]
 
 available_gear = [
     {"type": "helmet",
      "avail": [
-        {"name": "HoP",
-         "physical": 10,
-         "magic": 3,
-         "strength": 11,
-        },
         {"name": "M",
          "physical": 3,
          "magic": 12,
          "intelligence": 11,
+        },
+        {"name": "HoP",
+         "physical": 10,
+         "magic": 3,
+         "strength": 11,
         },
         {"name": "SH",
          "physical": 4,
@@ -75,50 +81,13 @@ available_gear = [
          "magic": 16,
          "intelligence": 11,
         },
-        {"name": "SA",
-         "physical": 8,
-         "magic": 6,
-        },
         {"name": "SSA",
          "physical": 12,
          "magic": 3,
         },
-     ]
-    },
-    {"type": "gloves",
-     "avail": [
-        {"name": "SSG",
+        {"name": "SA",
          "physical": 8,
-         "magic": 2,
-         "strength": 11,
-        },
-        {"name": "MLG",
-         "physical": 4,
-         "magic": 3,
-        },
-        {"name": "WM",
-         "physical": 2,
-         "magic": 7,
-        },
-     ]
-    },
-    {"type": "pants",
-     "avail": [
-        {"name": "WL",
-         "physical": 3,
-         "magic": 9,
-        },
-        {"name": "RSP",
-         "physical": 8,
-         "magic": 2,
-        },
-        {"name": "WP",
-         "physical": 1,
-         "magic": 5,
-        },
-        {"name": "FT",
-         "physical": 3,
-         "magic": 0,
+         "magic": 6,
         },
      ]
     },
@@ -138,18 +107,23 @@ available_gear = [
         },
      ]
     },
-    {"type": "ring",
+    {"type": "pants",
      "avail": [
-        {"name": "AR",
-         "physical": 0,
-         "magic": 8,
+        {"name": "SSL",
+         "physical": 10,
+         "magic": 2,
+         "strength": 11,
         },
-        {"name": "DR",
-         "physical": 0,
-         "magic": 6,
+        {"name": "WL",
+         "physical": 3,
+         "magic": 9,
         },
-        {"name": "JR",
-         "physical": 0,
+        {"name": "RSP",
+         "physical": 8,
+         "magic": 2,
+        },
+        {"name": "WP",
+         "physical": 1,
          "magic": 5,
         },
      ]
@@ -175,30 +149,59 @@ available_gear = [
         },
      ]
     },
+    {"type": "ring",
+     "avail": [
+        {"name": "AR",
+         "physical": 0,
+         "magic": 8,
+        },
+        {"name": "DLR",
+         "physical": 0,
+         "magic": 6,
+        },
+        {"name": "DLR",
+         "physical": 0,
+         "magic": 6,
+        },
+        {"name": "JR",
+         "physical": 0,
+         "magic": 5,
+        },
+     ]
+    },
+    {"type": "necklace",
+     "avail": [
+        {"name": "SA",
+         "physical": 0,
+         "magic": 11,
+        },
+        {"name": "SP",
+         "physical": 0,
+         "magic": 9,
+        },
+        {"name": "PA",
+         "physical": 0,
+         "magic": 8,
+        },
+     ]
+    },
 ]
-
-best_solutions = []
-best_solutions_sigs = set()
-max_best_solutions = 30
-num_items = 0
-already_evaluated_sig_hash_num_bits = 36
-already_evaluated_sig_hash_mask = (1 << already_evaluated_sig_hash_num_bits) - 1
-already_evaluated_sig_hash_num_bytes = 1 << (already_evaluated_sig_hash_num_bits - 3)
-already_evaluated_bitmap = bytearray(already_evaluated_sig_hash_num_bytes)
-start_time = time.time()
-debug_depth = 0
-termination_factor = 0.0
-total_permutations = 0
 
 required_attrs = set(["strength", "intelligence", "finesse"])
 
+best_solutions = []
+max_best_solutions = 40
+total_permutations = 0
+debug_depth = 0
+
+start_time = time.time()
+
 def main():
     global debug_depth
-    global termination_factor
     global characters
     global available_gear
+    global required_attrs
     global best_solutions
-    global num_items
 
     argv_copy = sys.argv[1:]
 
@@ -218,104 +221,20 @@ def main():
                 name = character["name"]
                 raise KeyError(f"{name} missing {key}") 
 
-    num_items = 0
     for type_group in available_gear:
-        num_items += len(type_group["avail"])
-    assert num_items > 0
-    termination_factor = calculate_termination_factor(num_items)
-
-    pin_type_i = 0
-    pin_type_i_num_constraints = 0
-    pin_avail_i = False
-    for type_i in range(0, len(available_gear)):
-        type_group = available_gear[type_i]
+        type_group["combinations"] = []
         type_name = type_group["type"]
-        num_constraints = 0
-        for character in characters:
-            if type_name in character or (type_name == "ring" and ("ring1" in character or "ring2" in character)):
-                num_constraints += 1
-        type_group_can_pin_avail_i = (num_constraints + len(type_group["avail"]) <= len(characters))
+        print(f"Building combinations for {type_name}")
+        build_all_combinations(type_group, type_name, 0, characters, {})
+        count = len(type_group["combinations"])
+        print(f"Number of combinations for {type_name}: {count}")
+        combinations = type_group["combinations"]
+        for i in range(0, len(combinations)):
+            print(f"#{i}: {combinations[i]}")
+        print("\n")
 
-        if (type_group_can_pin_avail_i and not pin_avail_i) or ((type_group_can_pin_avail_i == pin_avail_i)
-                                                                and pin_type_i_num_constraints < num_constraints):
-            pin_type_i = type_i
-            pin_type_i_num_constraints = num_constraints
-            pin_avail_i = type_group_can_pin_avail_i
-            print(f"pin_type_i={pin_type_i}, pin_avail_i={pin_avail_i} type_name={type_name}, "
-                  f"num_constraints={num_constraints}")
+    apply_all_combinations(0, characters, 0)
 
-    i = 1
-    outer_exploration_max = 8
-    while i <= outer_exploration_max:
-        print(f"\nLIMITED OUTER EXPLORATION #{i} of {outer_exploration_max}\n")
-        explore_all(characters, available_gear, 0, pin_type_i, pin_avail_i, True)
-        i += 1
-
-    for sweep_pass_limited in [True, False]:
-        best_limited_solutions = copy.deepcopy(best_solutions)
-        for solution_i in range(0, len(best_limited_solutions)):
-            solution = best_limited_solutions[solution_i]
-            available_gear_after_assignments = copy.deepcopy(available_gear)
-            for character in solution:
-                for key in character:
-                    if key in set(["name", "physical", "magic"]) or key in required_attrs:
-                        continue
-                    assigned_item_type = key
-                    assigned_item = character[key]
-                    if assigned_item == None:
-                        continue
-                    if assigned_item_type == "ring1" or assigned_item_type == "ring2":
-                        assigned_item_type = "ring"
-                    assigned_item_name = assigned_item["name"]
-                    found_and_removed = False
-                    for type_group in available_gear_after_assignments:
-                        if type_group["type"] == assigned_item_type:
-                            avail = type_group["avail"]
-                            for i in range(0, len(avail)):
-                                avail_item = avail[i]
-                                if avail_item["name"] == assigned_item_name:
-                                    avail.pop(i)
-                                    found_and_removed = True
-                                    break
-                        if found_and_removed:
-                            break
-                    if not found_and_removed:
-                        raise KeyError(f"item multiply assigned: {assigned_item_type}, {assigned_item_name}")
-
-            all_slots_filled = True
-            for character in solution:
-                for type_group in available_gear_after_assignments:
-                    item_type = type_group["type"]
-                    if not (item_type in character or (item_type == "ring" and
-                                                       ("ring1" in character and "ring2" in character))):
-                        for item in type_group["avail"]:
-                            item_name = item["name"]
-                            attr_minimum_met = True
-                            for attr in required_attrs:
-                                if attr in item:
-                                    if character[attr] < item[attr]:
-                                        attr_minimum_met = False
-                            if attr_minimum_met:
-                                character_name = character["name"]
-                                print(f"character {character_name} could take {item_type}: {item_name}")
-                                all_slots_filled = False
-
-            if not all_slots_filled:
-                num_items = 0
-                for type_group in available_gear_after_assignments:
-                    num_items += len(type_group["avail"])
-                assert num_items > 0
-                termination_factor = calculate_termination_factor(num_items)
-
-                if sweep_pass_limited:
-                    print(f"\nRETRYING SOLUTION {solution_i+1} of {len(best_limited_solutions)}\n")
-                else:
-                    print(f"\nRETRYING SOLUTION {solution_i+1} of {len(best_limited_solutions)}, unlimited\n")
-                print(f"remaining gear: {available_gear_after_assignments}\n")
-
-                explore_all(solution, available_gear_after_assignments, 0, None, None, sweep_pass_limited)
-
-    remove_suboptimal_solutions()
     sort_best_solutions_min_variance_first()
 
     for i in range(0, min(len(best_solutions), 8)):
@@ -338,186 +257,148 @@ def main():
                 print(f"{item_type}: {item_name}, {physical}, {magic}")
             print("\n")
 
-def calculate_termination_factor(N):
-    survival_prob = 24.25 * (N ** -1.917)
-    
-    T_prob = 1.0 - survival_prob
+def build_all_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
+    global required_attrs
 
-    return min(0.99999, max(0.0, T_prob))
-    
-def explore_all(characters, available_gear, depth, pin_type_i, pin_avail_i, allow_termination):
-    global start_time
-    global already_evaluated_bitmap
-    global num_items
-    global total_permutations
-    global debug_depth
-    global termination_factor
+    avail = type_group["avail"]
+    assert assign_item_i < len(avail)
+    assign_item = avail[assign_item_i]
 
-    type_count = len(available_gear)
-    type_i = 0
-    while type_i < type_count:
-        if pin_type_i != None and type_i != pin_type_i:
-            type_i += 1
-            continue
-        type = available_gear[type_i]
-        type_name = type["type"]
-        avail = type["avail"]
-        avail_count = len(avail)
-        if avail_count > 1:
-            pop_item = True
-        else:
-            pop_item = False
-
-        avail_i = 0
-        while avail_i < avail_count:
-            if pin_avail_i and avail_i != 0:
-                avail_i += 1
-                continue
-            item = avail[avail_i]
-
-            type_item_s = None
-            if depth <= debug_depth:
-                type_item_s = f"type: {type_i+1} of {type_count} ("
-                for i in range(0, type_count):
-                    if i > 0:
-                        type_item_s += " "
-                    if i == type_i:
-                        type_item_s += "*"
-                    type_item_s += available_gear[i]["type"]
-                type_item_s += f") item: {avail_i+1} of {avail_count} ("
-                for i in range(0, avail_count):
-                    if i > 0:
-                        type_item_s += " "
-                    if i == avail_i:
-                        type_item_s += "*"
-                    type_item_s += avail[i]["name"]
-                type_item_s += ")"
-
-            if pop_item:
-                avail.pop(avail_i)
-            else:
-                available_gear.pop(type_i)
-
-            for character_i in range(0, len(characters)):
-                if depth > 1 and termination_factor > 0.0:
-                    if allow_termination and random.random() <= termination_factor:
-                        continue
-                if depth <= debug_depth:
-                    elapsed_time = time.time() - start_time
-                    debug_s = f"d={depth} c={character_i} t={elapsed_time:.6f} "
-                    while len(debug_s) < 24:
-                        debug_s += " "
-                    debug_s += f"n={total_permutations} "
-                    while len(debug_s) < 37:
-                        debug_s += " "
-                    debug_s += "| "
-                    debug_s += ("  " * depth)
-                    debug_s += type_item_s
-                    print(debug_s)
-
-                character = characters[character_i]
-                if not (type_name in character or (type_name == "ring" and
-                                                   "ring1" in character and "ring2" in character)):
-                    attr_minimum_met = True
-                    for attr in required_attrs:
-                        if attr in item:
-                            if character[attr] < item[attr]:
-                                attr_minimum_met = False
-                    if not attr_minimum_met:
-                        continue
-
-                    if type_name == "ring":
-                        if "ring1" in character:
-                            type_name = "ring2"
-                        else:
-                            type_name = "ring1"
-
-                    character[type_name] = item
-                    character["physical"] += item["physical"]
-                    character["magic"] += item["magic"]
-
-                    sig = characters_sig(characters)
-                    sig_byte_index = sig >> 3
-                    sig_mask = 1 << (sig & 7)
-
-                    if not (already_evaluated_bitmap[sig_byte_index] & sig_mask):
-                        if depth > num_items / 4 or not allow_termination:
-                            already_evaluated_bitmap[sig_byte_index] |= sig_mask
-
-                        if not is_dead_branch(character, available_gear):
-                            evaluate(characters, sig)
-                            explore_all(characters, available_gear, depth + 1, None, False, allow_termination)
-
-                    del character[type_name]
-                    character["physical"] -= item["physical"]
-                    character["magic"] -= item["magic"]
-
-            if pop_item:
-                avail.insert(avail_i, item)
-            else:
-                available_gear.insert(type_i, type)
-
-            avail_i += 1
-        type_i += 1
-
-def characters_sig(characters):
-    sig = ""
+    any_assigned = False
     for character in characters:
+        if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+            continue
+        item_char_possible_assignment = True
+        for attr in required_attrs:
+            if attr in assign_item:
+                if character[attr] < assign_item[attr]:
+                    item_char_possible_assignment = False
+                    break
+        if not item_char_possible_assignment:
+            continue
+
+        if type_name != "ring":
+            assigned_key = type_name
+        else:
+            if "ring1" in character:
+                assigned_key = "ring2"
+            else:
+                assigned_key = "ring1"
+
+        character[assigned_key] = assign_item
+        any_assigned = True
+
+        new_assignments = copy.copy(partial_assignment)
         character_name = character["name"]
-        sig += f"::{character_name}"
-        keys = list(character)
-        keys.sort()
-        for key in keys:
-            if key == "name" or key == "physical" or key == "magic" or key in required_attrs:
-                continue
-            item = character[key]
-            if item is None:
-                continue
-            item_name = character[key]["name"]
-            item_physical = character[key]["physical"]
-            item_magic = character[key]["magic"]
-            sig += f":{item_name}({item_physical},{item_magic})"
+        new_assignments[f"{character_name} : {assigned_key}"] = assign_item
+        if any_assignable_gear(type_name, avail, assign_item_i + 1, characters):
+            # That's a partial combination
+            build_all_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
+        else:
+            type_group["combinations"].append(new_assignments)
 
-    digest = hashlib.sha256(sig.encode('utf-8')).digest()
-    return int.from_bytes(digest[:8], byteorder='big') & already_evaluated_sig_hash_mask
+        del character[assigned_key]
 
-def evaluate(characters, sig):
+    if assign_item_i < len(avail) - 1 and not any_assigned:
+        build_all_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
+
+def any_assignable_gear(type_name, avail, min_item_i, characters):
+    global required_attrs
+
+    while min_item_i < len(avail):
+        assign_item = avail[min_item_i]
+
+        for character in characters:
+            if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+                continue
+            item_char_possible_assignment = True
+            for attr in required_attrs:
+                if attr in assign_item:
+                    if character[attr] < assign_item[attr]:
+                        item_char_possible_assignment = False
+                        break
+            if item_char_possible_assignment:
+                return True
+
+        min_item_i += 1
+    return False
+
+def apply_all_combinations(type_group_i, characters, depth):
+    global available_gear
+    global total_permutations
+
+    combinations = available_gear[type_group_i]["combinations"]
+
+    for combination in combinations:
+        for assignment in combination:
+            assigned_item = combination[assignment]
+            separator_i = assignment.find(" : ")
+            assert separator_i > 0 and separator_i < len(assignment) - 3
+            character_name = assignment[:separator_i]
+            assigned_key = assignment[separator_i + 3:]
+            found = False
+            for character in characters:
+                if character["name"] == character_name:
+                    if assigned_key in character:
+                        item_name = character[assigned_key]["name"]
+                        raise KeyError(f"{character_name} already has {assigned_key}: {item_name}")
+                    character[assigned_key] = assigned_item
+                    character["physical"] += assigned_item["physical"]
+                    character["magic"] += assigned_item["magic"]
+                    found = True
+            assert found
+
+        total_permutations += 1
+        if depth <= debug_depth:
+            elapsed_time = time.time() - start_time
+            print(f"d={depth} n={total_permutations}  t={elapsed_time:.8f} applying combination {combination}")
+
+        if type_group_i < len(available_gear) - 1:
+            apply_all_combinations(type_group_i + 1, characters, depth + 1)
+        else:
+            evaluate(characters)
+
+        for assignment in combination:
+            assigned_item = combination[assignment]
+            separator_i = assignment.find(" : ")
+            assert separator_i > 0 and separator_i < len(assignment) - 3
+            character_name = assignment[:separator_i]
+            assigned_key = assignment[separator_i + 3:]
+            found = False
+            for character in characters:
+                if character["name"] == character_name:
+                    del character[assigned_key]
+                    character["physical"] -= assigned_item["physical"]
+                    character["magic"] -= assigned_item["magic"]
+                    found = True
+            assert found
+
+def evaluate(characters):
     global start_time
     global best_solutions
-    global best_solutions_sigs
-    global total_permutations
-
-    total_permutations += 1
 
     new_min = calculate_min(characters)
     new_average = calculate_average(characters)
 
     if len(best_solutions) == 0:
         best_solutions = [copy.deepcopy(characters)]
-        best_solutions_sigs.add(sig)
         print(f"min: {new_min}, average: {new_average}")
         print(f"{best_solutions}")
         return
-
-    if sig in best_solutions_sigs:
-        return  # already there
 
     existing_min = calculate_min(best_solutions[0])
     existing_average = calculate_average(best_solutions[0])
     elapsed_time = time.time() - start_time
 
     if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
-        limit_best_solutions(max_best_solutions - 1)
+        limit_best_solutions()
         best_solutions.insert(0, copy.deepcopy(characters))
-        best_solutions_sigs.add(sig)
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         print(f"{best_solutions}")
         return
     if new_min == existing_min and new_average == existing_average:
-        limit_best_solutions(max_best_solutions - 1)
+        limit_best_solutions()
         best_solutions.insert(0, copy.deepcopy(characters))
-        best_solutions_sigs.add(sig)
-        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         return
 
 def calculate_min(characters):
@@ -528,6 +409,13 @@ def calculate_min(characters):
         if result > character["magic"]:
             result = character["magic"]
     return result
+
+def calculate_average(characters):
+    result = 0
+    for character in characters:
+        result += character["physical"]
+        result += character["magic"]
+    return result / (len(characters) * 2)
 
 def calculate_min_physical(characters):
     result = characters[0]["physical"]
@@ -543,71 +431,18 @@ def calculate_min_magic(characters):
             result = character["magic"]
     return result
 
-def calculate_average(characters):
-    result = 0
-    for character in characters:
-        result += character["physical"]
-        result += character["magic"]
-    return result / (len(characters) * 2)
-
-def limit_best_solutions(n):
+def limit_best_solutions():
     global best_solutions
+    global max_best_solutions
 
-    if len(best_solutions) > n:
-        assert len(best_solutions) == n + 1
-        i = random.randint(1, n)
+    if len(best_solutions) == max_best_solutions:
+        i = random.randint(1, max_best_solutions - 1)
 
         # Remove a random one
-        removed = best_solutions.pop(i)
-        best_solutions_sigs.remove(characters_sig(removed))
+        best_solutions.pop(i)
 
         # Also remove the oldest (worst) one
-        removed = best_solutions.pop()
-        best_solutions_sigs.remove(characters_sig(removed))
-
-def is_dead_branch(character, available_gear):
-    global best_solutions
-
-    if len(best_solutions) == 0:
-        return False
-
-    best_possible_physical = character["physical"]
-    best_possible_magic = character["magic"]
-    for avail_type in available_gear:
-        avail_type_name = avail_type["type"]
-
-        if avail_type_name in character or (avail_type_name == "ring" and
-                                            "ring1" in character and "ring2" in character):
-            continue
-
-        best_add_physical = 0
-        best_add_magic = 0
-
-        avail_items = avail_type["avail"]
-        for avail_item in avail_items:
-            if best_add_physical < avail_item["physical"]:
-                best_add_physical = avail_item["physical"]
-            if best_add_magic < avail_item["magic"]:
-                best_add_magic = avail_item["magic"]
-
-        best_possible_physical += best_add_physical
-        best_possible_magic += best_add_magic
-
-    if best_possible_physical < calculate_min_physical(best_solutions[0]):
-        return True
-    if best_possible_magic < calculate_min_magic(best_solutions[0]):
-        return True
-
-    return False
-
-def remove_suboptimal_solutions():
-    best_min = calculate_min(best_solutions[0])
-    best_average = calculate_average(best_solutions[0])
-    while len(best_solutions) > 1:
-        if calculate_min(best_solutions[-1]) < best_min or calculate_average(best_solutions[-1]) < best_average:
-            best_solutions.pop()
-        else:
-            return
+        best_solutions.pop()
 
 def sort_best_solutions_min_variance_first():
     global best_solutions
@@ -630,5 +465,5 @@ def sort_best_solutions_min_variance_first():
                                                   + p_m_diff_sum_of_squares)
 
     best_solutions.sort(key=lambda s: s[0]["variance_sum_of_squares"])
-        
+
 main()
