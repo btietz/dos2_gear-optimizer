@@ -5,40 +5,49 @@ import time
 
 characters = [
     {"name": "Brian",
-     "strength": 13,
+     "strength": 17,
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 47,
-     "magic": 26,
+     "physical": 68,
+     "magic": 48,
+     "hp": 189,
 
-     "chest": None,
+     "gloves": None,
+     "belt": None,
+     "ring1": None,
     },
     {"name": "The Red Prince",
      "strength": 12,
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 64,
-     "magic": 32,
+     "physical": 47,
+     "magic": 27,
+     "hp": 169,
 
-     "chest": None,
+     "belt": None,
     },
     {"name": "Lohse",
-     "strength": 10,
+     "strength": 11,
      "finesse": 10,
      "intelligence": 14,
 
-     "physical": 1,
-     "magic": 4,
+     "physical": 8,
+     "magic": 42,
+     "hp": 160,
+
+     "chest": None,
+     "necklace": None,
     },
     {"name": "Fane",
      "strength": 10,
      "finesse": 10,
      "intelligence": 14,
 
-     "physical": 2,
-     "magic": 9,
+     "physical": 0,
+     "magic": 2,
+     "hp": 160,
 
      "ring1": None,
     },
@@ -47,23 +56,33 @@ characters = [
 available_gear = [
     {"type": "helmet",
      "avail": [
-        {"name": "M",
-         "physical": 3,
-         "magic": 12,
-         "intelligence": 11,
+        {"name": "CH",
+         "physical": 15,
+         "magic": 3,
+         "hp": 0,
+         "strength": 11,
         },
         {"name": "HoP",
          "physical": 10,
          "magic": 3,
+         "hp": 0,
          "strength": 11,
+        },
+        {"name": "M",
+         "physical": 3,
+         "magic": 12,
+         "hp": 0,
+         "intelligence": 11,
         },
         {"name": "SH",
          "physical": 4,
          "magic": 1,
+         "hp": 0,
         },
         {"name": "LH",
          "physical": 3,
          "magic": 2,
+         "hp": 0,
         },
      ]
     },
@@ -72,128 +91,173 @@ available_gear = [
         {"name": "MagM",
          "physical": 3,
          "magic": 18,
+         "hp": 0,
          "intelligence": 11,
         },
         {"name": "MenM",
          "physical": 4,
          "magic": 16,
+         "hp": 0,
          "intelligence": 11,
         },
-        {"name": "SSA",
-         "physical": 12,
-         "magic": 3,
+        {"name": "LSA",
+         "physical": 16,
+         "magic": 4,
+         "hp": 0,
+         "strength": 11,
         },
-        {"name": "SA",
-         "physical": 8,
-         "magic": 6,
+        {"name": "MB",
+         "physical": 15,
+         "magic": 3,
+         "hp": 0,
+         "strength": 11,
         },
      ]
     },
     {"type": "belt",
      "avail": [
-        {"name": "B",
-         "physical": 6,
+        {"name": "SB",
+         "physical": 12,
          "magic": 0,
+         "hp": 20,
         },
-        {"name": "B",
-         "physical": 6,
+        {"name": "SS",
+         "physical": 18,
          "magic": 0,
-        },
-        {"name": "B",
-         "physical": 6,
-         "magic": 0,
+         "hp": 32,
         },
      ]
     },
     {"type": "pants",
      "avail": [
+        {"name": "HSP",
+         "physical": 23,
+         "magic": 5,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "LHM",
+         "physical": 16,
+         "magic": 5,
+         "hp": 0,
+         "strength": 11,
+        },
         {"name": "SSL",
          "physical": 10,
          "magic": 2,
+         "hp": 0,
          "strength": 11,
         },
         {"name": "WL",
          "physical": 3,
          "magic": 9,
+         "hp": 0,
         },
         {"name": "RSP",
          "physical": 8,
          "magic": 2,
-        },
-        {"name": "WP",
-         "physical": 1,
-         "magic": 5,
+         "hp": 0,
         },
      ]
     },
     {"type": "boots",
      "avail": [
-        {"name": "MSandal",
+        {"name": "SS",
+         "physical": 15,
+         "magic": 3,
+         "hp": 0,
+         "strength": 11,
+        },
+        {"name": "MS1",
          "physical": 3,
-         "magic": 9,
+         "magic": 12,
+         "hp": 10,
          "intelligence": 11,
         },
-        {"name": "MShoe",
+        {"name": "MS2",
+         "physical": 3,
+         "magic": 9,
+         "hp": 0,
+         "intelligence": 11,
+        },
+        {"name": "MS3",
          "physical": 1,
          "magic": 6,
+         "hp": 0,
         },
         {"name": "BSB",
          "physical": 4,
          "magic": 1,
-        },
-        {"name": "RB",
-         "physical": 4,
-         "magic": 0,
-        },
-     ]
-    },
-    {"type": "ring",
-     "avail": [
-        {"name": "AR",
-         "physical": 0,
-         "magic": 8,
-        },
-        {"name": "DLR",
-         "physical": 0,
-         "magic": 6,
-        },
-        {"name": "DLR",
-         "physical": 0,
-         "magic": 6,
-        },
-        {"name": "JR",
-         "physical": 0,
-         "magic": 5,
+         "hp": 0,
         },
      ]
     },
     {"type": "necklace",
      "avail": [
-        {"name": "SA",
+        {"name": "PN",
+         "physical": 0,
+         "magic": 14,
+         "hp": 0,
+        },
+        {"name": "AD",
+         "physical": 0,
+         "magic": 12,
+         "hp": 10,
+        },
+        {"name": "AV",
          "physical": 0,
          "magic": 11,
+         "hp": 0,
         },
-        {"name": "SP",
+     ]
+    },
+    {"type": "ring",
+     "avail": [
+        {"name": "KP",
          "physical": 0,
-         "magic": 9,
+         "magic": 14,
+         "hp": 28,
         },
-        {"name": "PA",
+        {"name": "SM",
+         "physical": 0,
+         "magic": 14,
+         "hp": 0,
+        },
+        {"name": "ASR",
          "physical": 0,
          "magic": 8,
+         "hp": 0,
         },
-        {"name": "SC",
+        {"name": "ASR",
+         "physical": 0,
+         "magic": 8,
+         "hp": 0,
+        },
+        {"name": "LR",
          "physical": 0,
          "magic": 6,
-         "intelligence": 11,
+         "hp": 15,
+        },
+        {"name": "DR",
+         "physical": 0,
+         "magic": 6,
+         "hp": 0,
         },
      ]
     },
 ]
 
-
 required_attrs = set(["strength", "intelligence", "finesse"])
 
-best_solutions = []
+best_hp_solutions = [
+    # {
+    #     "characters" = copy.deepcopy(characters),
+    #     "available_gear" = copy.deepcopy(available_gear),
+    # }
+]
+best_armor_solutions = [
+    # characters array
+]
 max_best_solutions = 40
 total_permutations = 0
 debug_depth = 0
@@ -205,7 +269,8 @@ def main():
     global characters
     global available_gear
     global required_attrs
-    global best_solutions
+    global best_hp_solutions
+    global best_armor_solutions
 
     argv_copy = sys.argv[1:]
 
@@ -220,36 +285,72 @@ def main():
         raise KeyError(f"invalid argument {argv_copy[0]}") 
 
     for character in characters:
-        for key in required_attrs:
+        required_properties = copy.copy(required_attrs)
+        required_properties.add("name")
+        required_properties.add("physical")
+        required_properties.add("magic")
+        required_properties.add("hp")
+        for key in required_properties:
             if not key in character:
                 name = character["name"]
                 raise KeyError(f"{name} missing {key}") 
 
+    required_properties = ["name", "physical", "magic", "hp"]
     for type_group in available_gear:
-        type_group["combinations"] = []
         type_name = type_group["type"]
-        print(f"Building combinations for {type_name}")
-        build_all_combinations(type_group, type_name, 0, characters, {})
-        count = len(type_group["combinations"])
-        print(f"Number of combinations for {type_name}: {count}")
-        combinations = type_group["combinations"]
-        for i in range(0, len(combinations)):
-            print(f"#{i}: {combinations[i]}")
-        print("\n")
+        avail = type_group["avail"]
+        for item in avail:
+            for key in required_properties:
+                if not key in item:
+                    raise KeyError(f"{type_name}: {name} missing {key}") 
 
-    apply_all_combinations(0, characters, 0)
+    print("\nEvaluating HP solutions\n")
+    best_hp_solutions = [
+        {
+            "characters": copy.deepcopy(characters),
+            "available_gear": copy.deepcopy(available_gear),
+            "min_hp": calculate_min_hp(characters),
+            "average_hp": calculate_average_hp(characters),
+        }
+    ]
+    hp_solution_sigs = set()
+    build_all_hp_solutions(characters, available_gear, hp_solution_sigs, 0)
+
+    for hp_i in range(0, len(best_hp_solutions)):
+        print(f"\nEvaluating armor for HP solution {hp_i+1}/{len(best_hp_solutions)}\n")
+        hp_solution = best_hp_solutions[hp_i]
+        available_gear = hp_solution["available_gear"]
+        characters = hp_solution["characters"]
+        for type_group in available_gear:
+            type_name = type_group["type"]
+            type_group["combinations"] = []
+            print(f"Building armor combinations for {type_name}")
+            build_all_armor_combinations(type_group, type_name, 0, characters, {})
+            count = len(type_group["combinations"])
+            print(f"Number of armor combinations for {type_name}: {count}")
+            combinations = type_group["combinations"]
+            strip_duplicate_combinations(combinations)
+            for i in range(0, len(combinations)):
+                print(f"#{i+1}: {combinations[i]}")
+            print("\n")
+
+        apply_all_armor_combinations(0, characters, 0)
 
     sort_best_solutions_min_variance_first()
 
-    for i in range(0, min(len(best_solutions), 8)):
+    for i in range(0, min(len(best_armor_solutions), 8)):
         print(f"\nOPTION {i+1}:\n")
-        solution = best_solutions[i]
+        solution = best_armor_solutions[i]
         for character in solution:
             print(character["name"])
-            print(character["physical"])
-            print(character["magic"])
+            physical = character["physical"]
+            print(f"physical: {physical}")
+            magic = character["magic"]
+            print(f"magic: {magic}")
+            hp = character["hp"]
+            print(f"hp: {hp}")
             for key in character:
-                if key in set(["name", "physical", "magic", "variance_sum_of_squares"]) or key in required_attrs:
+                if key in set(["name", "physical", "magic", "hp", "variance_sum_of_squares"]) or key in required_attrs:
                     continue
                 item_type = key
                 item = character[key]
@@ -258,17 +359,141 @@ def main():
                 item_name = item["name"]
                 physical = item["physical"]
                 magic = item["magic"]
-                print(f"{item_type}: {item_name}, {physical}, {magic}")
+                hp = item["hp"]
+                print(f"{item_type}: {item_name}, {physical}, {magic}, {hp}")
             print("\n")
 
-def build_all_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
+def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
+    global required_attrs
+    global total_permutations
+
+    for type_group_i in range(0, len(available_gear)):
+        type_group = available_gear[type_group_i]
+        type_name = type_group["type"]
+        avail = type_group["avail"]
+        for avail_i in range(0, len(avail)):
+            assign_item = avail[avail_i]
+            if assign_item["hp"] == 0:
+                # This item does not contribute to HP, so skip it
+                continue
+
+            for character in characters:
+                if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+                    continue
+                item_char_possible_assignment = True
+                for attr in required_attrs:
+                    if attr in assign_item:
+                        if character[attr] < assign_item[attr]:
+                            item_char_possible_assignment = False
+                            break
+                if not item_char_possible_assignment:
+                    continue
+
+                if type_name != "ring":
+                    assigned_key = type_name
+                else:
+                    if "ring1" in character:
+                        assigned_key = "ring2"
+                    else:
+                        assigned_key = "ring1"
+
+                character[assigned_key] = assign_item
+                character["hp"] += assign_item["hp"]
+                avail.pop(avail_i)
+                if len(avail) == 0:
+                    available_gear.pop(type_group_i)
+
+                sig = characters_sig(characters)
+                if not sig in hp_solution_sigs:
+                    total_permutations += 1
+                    hp_solution_sigs.add(sig)
+
+                    if depth <= debug_depth:
+                        elapsed_time = time.time() - start_time
+                        item_name = assign_item["name"]
+                        character_name = character["name"]
+                        print(f"HP: d={depth} t={elapsed_time:.8f} n={total_permutations} applying {type_name}: "
+                              f"{item_name} to {character_name}")
+
+                    evaluate_for_hp(characters, available_gear)
+                    build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth + 1)
+
+                if len(avail) == 0:
+                    available_gear.insert(type_group_i, type_group)
+                avail.insert(avail_i, assign_item)
+                character["hp"] -= assign_item["hp"]
+                del character[assigned_key]
+
+def characters_sig(characters):
+    global required_attrs
+
+    sig = ""
+    for character in characters:
+        for key in character:
+            if key in set(["name", "physical", "magic", "hp"]) or key in required_attrs:
+                continue
+            item = character[key]
+            if item == None:
+                continue
+            item_name = item["name"]
+            if sig != "":
+                sig += ", "
+            sig += f"{key}:{item_name}"
+    assert sig != ""
+    return sig
+
+def evaluate_for_hp(characters, available_gear):
+    global start_time
+    global best_hp_solutions
+
+    new_min = calculate_min_hp(characters)
+    new_average = calculate_average_hp(characters)
+
+    existing_min = calculate_min_hp(best_hp_solutions[0]["characters"])
+    existing_average = calculate_average_hp(best_hp_solutions[0]["characters"])
+    elapsed_time = time.time() - start_time
+
+    if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
+        best_hp_solutions = [
+            {
+                "characters": copy.deepcopy(characters),
+                "available_gear": copy.deepcopy(available_gear),
+            }
+        ]
+        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
+        print(f"{best_hp_solutions}")
+        return
+    if new_min == existing_min and new_average == existing_average:
+        best_hp_solutions.append(
+            {
+                "characters": copy.deepcopy(characters),
+                "available_gear": copy.deepcopy(available_gear),
+            }
+        )
+        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}, count={len(best_hp_solutions)}")
+        print(f"{best_hp_solutions}")
+        return
+
+def calculate_min_hp(characters):
+    result = characters[0]["hp"]
+    for character in characters:
+        if result > character["hp"]:
+            result = character["hp"]
+    return result
+
+def calculate_average_hp(characters):
+    result = 0
+    for character in characters:
+        result += character["hp"]
+    return result / (len(characters))
+
+def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
 
     avail = type_group["avail"]
     assert assign_item_i < len(avail)
     assign_item = avail[assign_item_i]
 
-    any_assigned = False
     for character in characters:
         if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
             continue
@@ -290,21 +515,21 @@ def build_all_combinations(type_group, type_name, assign_item_i, characters, par
                 assigned_key = "ring1"
 
         character[assigned_key] = assign_item
-        any_assigned = True
 
         new_assignments = copy.copy(partial_assignment)
         character_name = character["name"]
         new_assignments[f"{character_name} : {assigned_key}"] = assign_item
         if any_assignable_gear(type_name, avail, assign_item_i + 1, characters):
             # That's a partial combination
-            build_all_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
+            build_all_armor_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
         else:
             type_group["combinations"].append(new_assignments)
 
         del character[assigned_key]
 
-    if assign_item_i < len(avail) - 1 and not any_assigned:
-        build_all_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
+    if assign_item_i < len(avail) - 1:
+        build_all_armor_combinations(type_group, type_name, assign_item_i + 1, characters,
+                                     copy.copy(partial_assignment))
 
 def any_assignable_gear(type_name, avail, min_item_i, characters):
     global required_attrs
@@ -327,13 +552,41 @@ def any_assignable_gear(type_name, avail, min_item_i, characters):
         min_item_i += 1
     return False
 
-def apply_all_combinations(type_group_i, characters, depth):
+def strip_duplicate_combinations(combinations):
+    combination_sigs = set()
+    i = 0
+    while i < len(combinations):
+        sig = combination_sig(combinations[i])
+        if sig in combination_sigs:
+            print(f"REMOVED: {i}: {sig}")
+            combinations.pop(i)
+            continue
+        combination_sigs.add(sig)
+        i += 1
+
+def combination_sig(combination):
+    sig = ""
+    for character in characters:
+        character_name = character["name"]
+        for assignment in combination:
+            separator_i = assignment.find(" : ")
+            assert separator_i > 0 and separator_i < len(assignment) - 3
+            assigned_character_name = assignment[:separator_i]
+            if character_name == assigned_character_name:
+                assigned_item_name = combination[assignment]["name"]
+                if sig != "":
+                    sig += ", "
+                sig += f"{character_name}: {assigned_item_name}"
+    return sig
+
+def apply_all_armor_combinations(type_group_i, characters, depth):
     global available_gear
     global total_permutations
 
     combinations = available_gear[type_group_i]["combinations"]
 
-    for combination in combinations:
+    for c_i in range(0, len(combinations)):
+        combination = combinations[c_i]
         for assignment in combination:
             assigned_item = combination[assignment]
             separator_i = assignment.find(" : ")
@@ -355,12 +608,13 @@ def apply_all_combinations(type_group_i, characters, depth):
         total_permutations += 1
         if depth <= debug_depth:
             elapsed_time = time.time() - start_time
-            print(f"d={depth} n={total_permutations}  t={elapsed_time:.8f} applying combination {combination}")
+            print(f"A: d={depth} c={c_i+1}/{len(combinations)} t={elapsed_time:.8f} n={total_permutations} applying "
+                  f"combination {combination}")
 
         if type_group_i < len(available_gear) - 1 and not is_dead_branch(type_group_i + 1, characters):
-            apply_all_combinations(type_group_i + 1, characters, depth + 1)
+            apply_all_armor_combinations(type_group_i + 1, characters, depth + 1)
         else:
-            evaluate(characters)
+            evaluate_for_armor(characters)
 
         for assignment in combination:
             assigned_item = combination[assignment]
@@ -378,12 +632,12 @@ def apply_all_combinations(type_group_i, characters, depth):
             assert found
 
 def is_dead_branch(min_type_group_i, characters):
-    global best_solutions
+    global best_armor_solutions
 
-    if len(best_solutions) == 0:
+    if len(best_armor_solutions) == 0:
         return False
 
-    best_min = calculate_min(best_solutions[0])
+    best_min = calculate_min_armor(best_armor_solutions[0])
 
     for character in characters:
         character_name = character["name"]
@@ -415,35 +669,35 @@ def is_dead_branch(min_type_group_i, characters):
 
     return False
 
-def evaluate(characters):
+def evaluate_for_armor(characters):
     global start_time
-    global best_solutions
+    global best_armor_solutions
 
-    new_min = calculate_min(characters)
-    new_average = calculate_average(characters)
+    new_min = calculate_min_armor(characters)
+    new_average = calculate_average_armor(characters)
 
-    if len(best_solutions) == 0:
-        best_solutions = [copy.deepcopy(characters)]
+    if len(best_armor_solutions) == 0:
+        best_armor_solutions = [copy.deepcopy(characters)]
         print(f"min: {new_min}, average: {new_average}")
-        print(f"{best_solutions}")
+        print(f"{best_armor_solutions}")
         return
 
-    existing_min = calculate_min(best_solutions[0])
-    existing_average = calculate_average(best_solutions[0])
+    existing_min = calculate_min_armor(best_armor_solutions[0])
+    existing_average = calculate_average_armor(best_armor_solutions[0])
     elapsed_time = time.time() - start_time
 
     if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
-        limit_best_solutions()
-        best_solutions.insert(0, copy.deepcopy(characters))
+        limit_best_armor_solutions()
+        best_armor_solutions.insert(0, copy.deepcopy(characters))
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
-        print(f"{best_solutions}")
+        print(f"{best_armor_solutions}")
         return
     if new_min == existing_min and new_average == existing_average:
-        limit_best_solutions()
-        best_solutions.insert(0, copy.deepcopy(characters))
+        limit_best_armor_solutions()
+        best_armor_solutions.insert(0, copy.deepcopy(characters))
         return
 
-def calculate_min(characters):
+def calculate_min_armor(characters):
     result = characters[0]["physical"]
     for character in characters:
         if result > character["physical"]:
@@ -452,7 +706,7 @@ def calculate_min(characters):
             result = character["magic"]
     return result
 
-def calculate_average(characters):
+def calculate_average_armor(characters):
     result = 0
     for character in characters:
         result += character["physical"]
@@ -473,23 +727,23 @@ def calculate_min_magic(characters):
             result = character["magic"]
     return result
 
-def limit_best_solutions():
-    global best_solutions
+def limit_best_armor_solutions():
+    global best_armor_solutions
     global max_best_solutions
 
-    if len(best_solutions) == max_best_solutions:
+    if len(best_armor_solutions) == max_best_solutions:
         i = random.randint(1, max_best_solutions - 1)
 
         # Remove a random one
-        best_solutions.pop(i)
+        best_armor_solutions.pop(i)
 
         # Also remove the oldest (worst) one
-        best_solutions.pop()
+        best_armor_solutions.pop()
 
 def sort_best_solutions_min_variance_first():
-    global best_solutions
+    global best_armor_solutions
 
-    for solution in best_solutions:
+    for solution in best_armor_solutions:
         min_physical = calculate_min_physical(solution)
         min_magic = calculate_min_magic(solution)
         min_average = (min_physical + min_magic) / 2
@@ -506,6 +760,6 @@ def sort_best_solutions_min_variance_first():
         solution[0]["variance_sum_of_squares"] = (physical_sum_of_squares + magic_sum_of_squares
                                                   + p_m_diff_sum_of_squares)
 
-    best_solutions.sort(key=lambda s: s[0]["variance_sum_of_squares"])
+    best_armor_solutions.sort(key=lambda s: s[0]["variance_sum_of_squares"])
 
 main()
