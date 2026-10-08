@@ -262,6 +262,7 @@ best_armor_solutions = [
 ]
 max_best_solutions = 40
 total_permutations = 0
+assignment_key_splits = {}
 debug_depth = 0
 
 start_time = time.time()
@@ -520,6 +521,7 @@ def sort_and_limit_best_hp_solutions():
 
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
+    global assignment_key_splits
 
     avail = type_group["avail"]
     assert assign_item_i < len(avail)
@@ -549,7 +551,9 @@ def build_all_armor_combinations(type_group, type_name, assign_item_i, character
 
         new_assignments = copy.copy(partial_assignment)
         character_name = character["name"]
-        new_assignments[f"{character_name} : {assigned_key}"] = assign_item
+        assignment_key = f"{character_name} : {assigned_key}"
+        new_assignments[assignment_key] = assign_item
+        assignment_key_splits[assignment_key] = [character_name, assigned_key]
         if any_assignable_gear(type_name, avail, assign_item_i + 1, characters):
             # That's a partial combination
             build_all_armor_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments)
@@ -596,13 +600,14 @@ def strip_duplicate_combinations(combinations):
         i += 1
 
 def combination_sig(combination):
+    global assignment_key_splits
+
     sig = ""
     for character in characters:
         character_name = character["name"]
         for assignment in combination:
-            separator_i = assignment.find(" : ")
-            assert separator_i > 0 and separator_i < len(assignment) - 3
-            assigned_character_name = assignment[:separator_i]
+            assignment_split = assignment_key_splits[assignment]
+            assigned_character_name = assignment_split[0]
             if character_name == assigned_character_name:
                 assigned_item_name = combination[assignment]["name"]
                 if sig != "":
@@ -612,6 +617,7 @@ def combination_sig(combination):
 
 def apply_all_armor_combinations(type_group_i, characters, depth):
     global available_gear
+    global assignment_key_splits
     global total_permutations
 
     combinations = available_gear[type_group_i]["combinations"]
@@ -620,10 +626,9 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
         combination = combinations[c_i]
         for assignment in combination:
             assigned_item = combination[assignment]
-            separator_i = assignment.find(" : ")
-            assert separator_i > 0 and separator_i < len(assignment) - 3
-            character_name = assignment[:separator_i]
-            assigned_key = assignment[separator_i + 3:]
+            assignment_split = assignment_key_splits[assignment]
+            character_name = assignment_split[0]
+            assigned_key = assignment_split[1]
             found = False
             for character in characters:
                 if character["name"] == character_name:
@@ -649,10 +654,9 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
 
         for assignment in combination:
             assigned_item = combination[assignment]
-            separator_i = assignment.find(" : ")
-            assert separator_i > 0 and separator_i < len(assignment) - 3
-            character_name = assignment[:separator_i]
-            assigned_key = assignment[separator_i + 3:]
+            assignment_split = assignment_key_splits[assignment]
+            character_name = assignment_split[0]
+            assigned_key = assignment_split[1]
             found = False
             for character in characters:
                 if character["name"] == character_name:
@@ -664,6 +668,7 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
 
 def is_dead_branch(min_type_group_i, characters):
     global best_armor_solutions
+    global assignment_key_splits
 
     if len(best_armor_solutions) == 0:
         return False
@@ -682,8 +687,8 @@ def is_dead_branch(min_type_group_i, characters):
             best_type_magic = 0
             for combination in combinations:
                 for assignment in combination:
-                    separator_i = assignment.find(" : ")
-                    if assignment[:separator_i] == character_name:
+                    assignment_split = assignment_key_splits[assignment]
+                    if assignment_split[0] == character_name:
                         assigned_item = combination[assignment]
                         if best_type_physical < assigned_item["physical"]:
                             best_type_physical = assigned_item["physical"]
