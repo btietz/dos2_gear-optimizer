@@ -435,6 +435,8 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
 
                 character[assigned_key] = assign_item
                 character["hp"] += assign_item["hp"]
+                character["physical"] += assign_item["physical"]
+                character["magic"] += assign_item["magic"]
                 avail.pop(avail_i)
                 if len(avail) == 0:
                     available_gear.pop(type_group_i)
@@ -458,6 +460,8 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
                     available_gear.insert(type_group_i, type_group)
                 avail.insert(avail_i, assign_item)
                 character["hp"] -= assign_item["hp"]
+                character["physical"] -= assign_item["physical"]
+                character["magic"] -= assign_item["magic"]
                 del character[assigned_key]
 
 def characters_sig(characters):
