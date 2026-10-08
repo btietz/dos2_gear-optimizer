@@ -251,10 +251,12 @@ required_attrs = set(["strength", "intelligence", "finesse"])
 
 best_hp_solutions = [
     # {
-    #     "characters" = copy.deepcopy(characters),
-    #     "available_gear" = copy.deepcopy(available_gear),
+    #     "characters": copy.deepcopy(characters),
+    #     "available_gear": copy.deepcopy(available_gear),
+    #     "min_hp": calculate_min_hp(characters),
     # }
 ]
+best_hp_solutions_tolerance = 0.85
 best_armor_solutions = [
     # characters array
 ]
@@ -300,9 +302,10 @@ def main():
         type_name = type_group["type"]
         avail = type_group["avail"]
         for item in avail:
+            item_name = item["name"]
             for key in required_properties:
                 if not key in item:
-                    raise KeyError(f"{type_name}: {name} missing {key}") 
+                    raise KeyError(f"{type_name}: {item_name} missing {key}") 
 
     print("\nEvaluating HP solutions\n")
     best_hp_solutions = [
@@ -310,7 +313,6 @@ def main():
             "characters": copy.deepcopy(characters),
             "available_gear": copy.deepcopy(available_gear),
             "min_hp": calculate_min_hp(characters),
-            "average_hp": calculate_average_hp(characters),
         }
     ]
     hp_solution_sigs = set()
@@ -445,33 +447,24 @@ def characters_sig(characters):
 def evaluate_for_hp(characters, available_gear):
     global start_time
     global best_hp_solutions
+    global best_hp_solutions_tolerance
 
+    existing_best_min = best_hp_solutions[0]["min_hp"]
     new_min = calculate_min_hp(characters)
-    new_average = calculate_average_hp(characters)
 
-    existing_min = calculate_min_hp(best_hp_solutions[0]["characters"])
-    existing_average = calculate_average_hp(best_hp_solutions[0]["characters"])
-    elapsed_time = time.time() - start_time
-
-    if new_min > existing_min or (new_min == existing_min and new_average > existing_average):
-        best_hp_solutions = [
-            {
-                "characters": copy.deepcopy(characters),
-                "available_gear": copy.deepcopy(available_gear),
-            }
-        ]
-        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
-        print(f"{best_hp_solutions}")
-        return
-    if new_min == existing_min and new_average == existing_average:
+    if new_min > existing_best_min * best_hp_solutions_tolerance:
         best_hp_solutions.append(
             {
                 "characters": copy.deepcopy(characters),
                 "available_gear": copy.deepcopy(available_gear),
+                "min_hp": calculate_min_hp(characters),
             }
         )
-        print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}, count={len(best_hp_solutions)}")
-        print(f"{best_hp_solutions}")
+        sort_and_limit_best_hp_solutions()
+        if new_min > existing_best_min:
+            elapsed_time = time.time() - start_time
+            print(f"min: {new_min} t={elapsed_time:.8f}, count={len(best_hp_solutions)}")
+            print(f"{best_hp_solutions}")
         return
 
 def calculate_min_hp(characters):
@@ -481,11 +474,49 @@ def calculate_min_hp(characters):
             result = character["hp"]
     return result
 
-def calculate_average_hp(characters):
-    result = 0
-    for character in characters:
-        result += character["hp"]
-    return result / (len(characters))
+def sort_and_limit_best_hp_solutions():
+    global best_hp_solutions
+    global debug_depth
+
+    best_hp_solutions.sort(key=lambda s: s["min_hp"])
+
+    existing_best_min = best_hp_solutions[-1]["min_hp"]
+
+    while best_hp_solutions[0]["min_hp"] < existing_best_min * best_hp_solutions_tolerance:
+        best_hp_solutions.pop(0)
+
+    cut_range_low_i = 0
+    cut_range_high_i = len(best_hp_solutions) - 1
+    while len(best_hp_solutions) > max_best_solutions:
+        cut_range_mid_i = int((cut_range_low_i + cut_range_high_i) / 2)
+        if cut_range_mid_i == cut_range_low_i or cut_range_mid_i == cut_range_high_i:
+            best_hp_solutions.pop(cut_range_mid_i)
+            continue
+
+        low_hp = best_hp_solutions[cut_range_low_i]["min_hp"]
+        mid_hp = best_hp_solutions[cut_range_mid_i]["min_hp"]
+        high_hp = best_hp_solutions[cut_range_high_i]["min_hp"]
+        low_mid_delta = mid_hp - low_hp
+        mid_high_delta = high_hp - mid_hp
+        if low_mid_delta > mid_high_delta:
+            cut_range_high_i = cut_range_mid_i
+        elif low_mid_delta < mid_high_delta:
+            cut_range_low_i = cut_range_mid_i
+        else:
+            # The halves are balanced, so randomly cut from the low or high side
+            if random.randint(0, 1) == 0:
+                cut_range_low_i = cut_range_mid_i
+            else:
+                cut_range_high_i = cut_range_mid_i
+
+    if debug_depth > 0:
+        value = best_hp_solutions[0]["min_hp"]
+        values = f"{value}"
+        for i in range(1, len(best_hp_solutions)):
+            value = best_hp_solutions[i]["min_hp"]
+            values += f", {value}"
+        elapsed_time = time.time() - start_time
+        print(f"best_hp_solutions: count={len(best_hp_solutions)}, t={elapsed_time:.8f}: [{values}]")
 
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
