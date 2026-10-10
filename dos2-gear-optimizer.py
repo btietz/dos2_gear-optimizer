@@ -295,6 +295,7 @@ best_armor_solutions = [
 ]
 max_best_solutions = 40
 total_permutations = 0
+total_solution_refinements = 0
 assignment_key_splits = {}
 debug_depth = 0
 
@@ -356,6 +357,7 @@ def main():
         print(f"\nEvaluating armor for HP solution {hp_i+1}/{len(best_hp_solutions)}\n")
         hp_solution = best_hp_solutions[hp_i]
         available_gear = hp_solution["available_gear"]
+        available_gear.sort(key=lambda s: gear_armor_value_spread(s), reverse=True)
         characters = hp_solution["characters"]
         for type_group in available_gear:
             type_name = type_group["type"]
@@ -556,6 +558,29 @@ def sort_and_limit_best_hp_solutions():
         elapsed_time = time.time() - start_time
         print(f"best_hp_solutions: count={len(best_hp_solutions)}, t={elapsed_time:.8f}: [{values}]")
 
+def gear_armor_value_spread(type_group):
+    avail = type_group["avail"]
+    if len(type_group) < 2:
+        return 0
+    min_physical = avail[0]["physical"]
+    max_physical = min_physical
+    min_magic = avail[0]["magic"]
+    max_magic = min_magic
+    for i in range(1, len(avail)):
+        physical = avail[i]["physical"]
+        if min_physical > physical:
+            min_physical = physical
+        if max_physical < physical:
+            max_physical = physical
+        magic = avail[i]["magic"]
+        if min_magic > magic:
+            min_magic = magic
+        if max_magic < magic:
+            max_magic = magic
+    physical_spread = max_physical - min_physical
+    magic_spread = max_magic - min_magic
+    return max(physical_spread, magic_spread)
+
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
     global assignment_key_splits
@@ -706,6 +731,8 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
 def is_dead_branch(min_type_group_i, characters):
     global best_armor_solutions
     global assignment_key_splits
+    global total_solution_refinements
+    global max_best_solutions
 
     if len(best_armor_solutions) == 0:
         return False
@@ -716,12 +743,17 @@ def is_dead_branch(min_type_group_i, characters):
         character_name = character["name"]
         max_character_physical = character["physical"]
         max_character_magic = character["magic"]
+        max_character_physical_cofactor_magic = max_character_magic
+        max_character_magic_cofactor_physical = max_character_physical
         type_group_i = min_type_group_i
         while type_group_i < len(available_gear):
             type_group = available_gear[type_group_i]
             combinations = type_group["combinations"]
             best_type_physical = 0
             best_type_magic = 0
+            best_type_physical_cofactor_magic = 0
+            best_type_magic_cofactor_physical = 0
+
             for combination in combinations:
                 for assignment in combination:
                     assignment_split = assignment_key_splits[assignment]
@@ -729,10 +761,14 @@ def is_dead_branch(min_type_group_i, characters):
                         assigned_item = combination[assignment]
                         if best_type_physical < assigned_item["physical"]:
                             best_type_physical = assigned_item["physical"]
+                            best_type_physical_cofactor_magic = assigned_item["magic"]
                         if best_type_magic < assigned_item["magic"]:
                             best_type_magic = assigned_item["magic"]
+                            best_type_magic_cofactor_physical = assigned_item["physical"]
             max_character_physical += best_type_physical
             max_character_magic += best_type_magic
+            max_character_physical_cofactor_magic += best_type_physical_cofactor_magic
+            max_character_magic_cofactor_physical += best_type_magic_cofactor_physical
             type_group_i += 1
 
         if max_character_physical < best_min:
@@ -740,11 +776,21 @@ def is_dead_branch(min_type_group_i, characters):
         if max_character_magic < best_min:
             return True
 
+        cofactor_threshold = 0.935
+
+        if (total_solution_refinements > max_best_solutions / 5 and
+                max_character_physical_cofactor_magic < best_min * cofactor_threshold):
+            return True
+        if (total_solution_refinements > max_best_solutions / 5 and
+                max_character_magic_cofactor_physical < best_min * cofactor_threshold):
+            return True
+
     return False
 
 def evaluate_for_armor(characters):
     global start_time
     global best_armor_solutions
+    global total_solution_refinements
 
     new_min = calculate_min_armor(characters)
     new_average = calculate_average_armor(characters)
@@ -764,6 +810,7 @@ def evaluate_for_armor(characters):
         best_armor_solutions.insert(0, copy.deepcopy(characters))
         print(f"min: {new_min}, average: {new_average}, t={elapsed_time:.8f}")
         print(f"{best_armor_solutions}")
+        total_solution_refinements += 1
         return
     if new_min == existing_min and new_average == existing_average:
         limit_best_armor_solutions()
