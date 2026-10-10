@@ -40,7 +40,7 @@ of memory far sooner.  If the script is dying on you due to out of memory,
 reduce already_evaluated_sig_hash_num_bits.  As with setting up the initial
 conditions, if you're here, you know what that means, and you'll figure it out.
 
-There is only one command line option:
+There are three command line option:
 
 -d X: this is for progress visibility.  X is the recursion depth to which the
 script will print progress lines.  Those lines look like this:
@@ -55,3 +55,22 @@ gear assignment permutations have been considered thus far.  The last parts,
 type: and item: tell you what it's looking at right now.  If you're using this
 for progress tracking, you'll see the type march forward (designated by *) and
 likewise for item.
+
+--faster X / -f X: decreases the search space and increases the threshold for
+armor cofactor heuristic prediction of dead branches, trading solution quality
+for speed.  When running with -d, you can search the console output for lines
+like this, to monitor progress:
+
+Evaluating armor for HP solution 1/31
+...
+Evaluating armor for HP solution 2/31
+
+If it is taking a long time and not making much progress, kill it and try -f 1,
+and if that's still too slow, -f 2, etc.  Please note that higher values give
+diminishing returns (execution time hits a wall, while solution quality
+continues to degrade).
+
+--more-thorough X / -m X: the opposite of --faster.  If the script finishes in
+a timely manner and you want so see if you can get a better quality solution,
+you can try -m 1, -m 2, etc. for a more thorough exploration of the search
+space.

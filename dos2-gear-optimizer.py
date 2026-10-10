@@ -293,9 +293,13 @@ best_hp_solutions_tolerance = 0.85
 best_armor_solutions = [
     # characters array
 ]
-max_best_solutions = 40
+max_best_solutions = 35
 total_permutations = 0
 total_solution_refinements = 0
+more_thorough = 0
+cofactor_delta = 0
+cofactor_start_count = 10
+cofactor_threshold = 0.926
 assignment_key_splits = {}
 debug_depth = 0
 
@@ -303,6 +307,9 @@ start_time = time.time()
 
 def main():
     global debug_depth
+    global cofactor_start_count
+    global cofactor_threshold
+    global max_best_solutions
     global characters
     global available_gear
     global required_attrs
@@ -310,6 +317,8 @@ def main():
     global best_armor_solutions
 
     argv_copy = sys.argv[1:]
+    faster = 0
+    more_thorough = 0
 
     while len(argv_copy):
         if argv_copy[0] == '-d':
@@ -319,7 +328,40 @@ def main():
             argv_copy = argv_copy[2:]
             continue
 
+        if argv_copy[0] == '--faster' or argv_copy[0] == '-f':
+            if len(argv_copy) == 1:
+                raise KeyError("missing faster factor") 
+            faster = int(argv_copy[1])
+            argv_copy = argv_copy[2:]
+            if faster > 50:
+                raise ValueError("--faster is limited to 50") 
+            if faster == 1:
+                cofactor_start_count = 9
+            elif faster >= 2:
+                cofactor_start_count = 8
+            max_best_solutions -= min(faster, 5)
+            cofactor_threshold += 0.001 * faster
+            continue
+
+        if argv_copy[0] == '--more-thorough' or argv_copy[0] == '-m':
+            if len(argv_copy) == 1:
+                raise KeyError("missing more-thorough factor") 
+            more_thorough = int(argv_copy[1])
+            argv_copy = argv_copy[2:]
+            if more_thorough > 100:
+                raise ValueError("--more-thorough is limited to 100") 
+            if more_thorough == 1:
+                cofactor_start_count = 11
+            elif more_thorough >= 2:
+                cofactor_start_count = 12
+            max_best_solutions += min(more_thorough, 5)
+            cofactor_threshold -= 0.001 * more_thorough
+            continue
+
         raise KeyError(f"invalid argument {argv_copy[0]}") 
+
+    if faster != 0 and more_thorough != 0:
+        raise Exception("--faster and --more-thorough are mutually exclusive")
 
     for character in characters:
         required_properties = copy.copy(required_attrs)
@@ -733,6 +775,8 @@ def is_dead_branch(min_type_group_i, characters):
     global assignment_key_splits
     global total_solution_refinements
     global max_best_solutions
+    global cofactor_start_count
+    global cofactor_threshold
 
     if len(best_armor_solutions) == 0:
         return False
@@ -776,12 +820,10 @@ def is_dead_branch(min_type_group_i, characters):
         if max_character_magic < best_min:
             return True
 
-        cofactor_threshold = 0.935
-
-        if (total_solution_refinements > max_best_solutions / 5 and
+        if (total_solution_refinements > cofactor_start_count and
                 max_character_physical_cofactor_magic < best_min * cofactor_threshold):
             return True
-        if (total_solution_refinements > max_best_solutions / 5 and
+        if (total_solution_refinements > cofactor_start_count and
                 max_character_magic_cofactor_physical < best_min * cofactor_threshold):
             return True
 
