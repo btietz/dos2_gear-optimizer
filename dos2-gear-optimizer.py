@@ -296,7 +296,6 @@ best_armor_solutions = [
 max_best_solutions = 35
 total_permutations = 0
 total_solution_refinements = 0
-more_thorough = 0
 cofactor_delta = 0
 cofactor_start_count = 10
 cofactor_threshold = 0.926
@@ -472,10 +471,11 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
                 if type_name != "ring":
                     assigned_key = type_name
                 else:
-                    if "ring1" in character:
-                        assigned_key = "ring2"
-                    else:
+                    if not "ring1" in character:
                         assigned_key = "ring1"
+                    else:
+                        assert not "ring2" in character
+                        assigned_key = "ring2"
 
                 character[assigned_key] = assign_item
                 character["hp"] += assign_item["hp"]
