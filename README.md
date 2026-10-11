@@ -26,19 +26,12 @@ character baseline "physical" and "magic".  The script will treat those as
 off-limits.  This is the mechanism for reducing search space and execution time
 as mentioned above.
 
-A note about memory management: because the search space is absolutely massive,
-potentially up to hundreds of millions of permutations, the script keeps track
-of what permutations it has already evaluated.  To put it simply, assigning
-chest 1 to character A then boots 3 to character B is exactly the same as
-assigning boots 3 to character B then chest 1 to character A.  To avoid all the
-redundant work that would arise from fully exploring the optimal solution search
-space, the script keeps track of what permutations it has already evaluated.
-Because there are potentially hundreds of millions of them, it uses a hash value
-for each possible solution, and a very large bitmap to keep track of which ones
-it's already evaluated.  Why not just use a set, you ask?  That would run out
-of memory far sooner.  If the script is dying on you due to out of memory,
-reduce already_evaluated_sig_hash_num_bits.  As with setting up the initial
-conditions, if you're here, you know what that means, and you'll figure it out.
+Locking down particular gear assignments exponentially reduces the search space
+and with it execution time.  Use those wherever possible.  When you have meta
+constraints (like making sure a piece of gear with +1 strength or +1 warfare
+lands on your front line melee fighters), use the "characters": list to restrict
+a piece of gear to the characters who would benefit most.  That also
+exponentially reduces the search space.
 
 There are three command line option:
 

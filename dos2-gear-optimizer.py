@@ -9,33 +9,31 @@ characters = [
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 68,
-     "magic": 48,
-     "hp": 189,
+     "physical": 66,
+     "magic": 34,
+     "hp": 230,
 
-     "gloves": None,
      "belt": None,
-     "ring1": None,
     },
     {"name": "The Red Prince",
      "strength": 12,
      "finesse": 10,
      "intelligence": 10,
 
-     "physical": 47,
-     "magic": 27,
-     "hp": 169,
+     "physical": 52,
+     "magic": 32,
+     "hp": 218,
 
      "belt": None,
     },
     {"name": "Lohse",
      "strength": 11,
      "finesse": 10,
-     "intelligence": 14,
+     "intelligence": 15,
 
      "physical": 8,
      "magic": 42,
-     "hp": 160,
+     "hp": 194,
 
      "chest": None,
      "necklace": None,
@@ -43,19 +41,27 @@ characters = [
     {"name": "Fane",
      "strength": 10,
      "finesse": 10,
-     "intelligence": 14,
+     "intelligence": 15,
 
-     "physical": 0,
-     "magic": 2,
-     "hp": 160,
+     "physical": 8,
+     "magic": 47,
+     "hp": 194,
 
-     "ring1": None,
+     "helmet": None,
+     "chest": None,
+     "ring2": None,
     },
 ]
 
 available_gear = [
     {"type": "helmet",
      "avail": [
+        {"name": "Sk",
+         "physical": 4,
+         "magic": 17,
+         "hp": 0,
+         "intelligence": 11,
+        },
         {"name": "CH",
          "physical": 15,
          "magic": 3,
@@ -68,37 +74,16 @@ available_gear = [
          "hp": 0,
          "strength": 11,
         },
-        {"name": "M",
-         "physical": 3,
-         "magic": 12,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "SH",
-         "physical": 4,
-         "magic": 1,
-         "hp": 0,
-        },
-        {"name": "LH",
-         "physical": 3,
-         "magic": 2,
-         "hp": 0,
-        },
      ]
     },
     {"type": "chest",
      "avail": [
-        {"name": "MagM",
-         "physical": 3,
-         "magic": 18,
+        {"name": "MB",
+         "physical": 15,
+         "magic": 3,
          "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "MenM",
-         "physical": 4,
-         "magic": 16,
-         "hp": 0,
-         "intelligence": 11,
+         "strength": 11,
+         "characters": ["Brian", "The Red Prince"], # for +1 strength
         },
         {"name": "LSA",
          "physical": 16,
@@ -106,33 +91,21 @@ available_gear = [
          "hp": 0,
          "strength": 11,
         },
-        {"name": "MB",
-         "physical": 15,
-         "magic": 3,
-         "hp": 0,
-         "strength": 11,
-        },
      ]
     },
     {"type": "gloves",
      "avail": [
+        {"name": "MLSG",
+         "physical": 18,
+         "magic": 4,
+         "hp": 0,
+         "strength": 12,
+        },
         {"name": "SF",
          "physical": 3,
          "magic": 15,
          "hp": 0,
          "intelligence": 11,
-        },
-        {"name": "WM",
-         "physical": 2,
-         "magic": 10,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "SSG",
-         "physical": 8,
-         "magic": 2,
-         "hp": 0,
-         "strength": 11,
         },
         {"name": "SG",
          "physical": 13,
@@ -142,22 +115,23 @@ available_gear = [
         },
         {"name": "WM",
          "physical": 2,
-         "magic": 7,
+         "magic": 10,
          "hp": 0,
+         "intelligence": 11,
         },
      ]
     },
     {"type": "belt",
      "avail": [
+        {"name": "SS",
+         "physical": 18,
+         "magic": 0,
+         "hp": 37,
+        },
         {"name": "SB",
          "physical": 12,
          "magic": 0,
          "hp": 20,
-        },
-        {"name": "SS",
-         "physical": 18,
-         "magic": 0,
-         "hp": 32,
         },
      ]
     },
@@ -235,7 +209,7 @@ available_gear = [
         {"name": "AD",
          "physical": 0,
          "magic": 12,
-         "hp": 10,
+         "hp": 12,
         },
         {"name": "AV",
          "physical": 0,
@@ -256,12 +230,23 @@ available_gear = [
          "magic": 14,
          "hp": 0,
         },
-        {"name": "ASR",
+        {"name": "SR",
          "physical": 0,
-         "magic": 8,
-         "hp": 0,
+         "magic": 13,
+         "hp": 12,
         },
-        {"name": "ASR",
+        {"name": "RR",
+         "physical": 0,
+         "magic": 13,
+         "hp": 0,
+         "characters": ["Brian", "The Red Prince"], # for +1 warfare
+        },
+        {"name": "FiF",
+         "physical": 0,
+         "magic": 11,
+         "hp": 23,
+        },
+        {"name": "AR",
          "physical": 0,
          "magic": 8,
          "hp": 0,
@@ -270,11 +255,6 @@ available_gear = [
          "physical": 0,
          "magic": 6,
          "hp": 15,
-        },
-        {"name": "DR",
-         "physical": 0,
-         "magic": 6,
-         "hp": 0,
         },
      ]
     },
@@ -459,6 +439,9 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
             for character in characters:
                 if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
                     continue
+                character_name = character["name"]
+                if "characters" in assign_item and not character_name in assign_item["characters"]:
+                    continue
                 item_char_possible_assignment = True
                 for attr in required_attrs:
                     if attr in assign_item:
@@ -493,7 +476,6 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
                     if depth <= debug_depth:
                         elapsed_time = time.time() - start_time
                         item_name = assign_item["name"]
-                        character_name = character["name"]
                         print(f"HP: d={depth} t={elapsed_time:.8f} n={total_permutations} applying {type_name}: "
                               f"{item_name} to {character_name}")
 
@@ -531,7 +513,7 @@ def evaluate_for_hp(characters, available_gear):
     global best_hp_solutions
     global best_hp_solutions_tolerance
 
-    existing_best_min = best_hp_solutions[0]["min_hp"]
+    existing_best_min = best_hp_solutions[-1]["min_hp"]
     new_min = calculate_min_hp(characters)
 
     if new_min > existing_best_min * best_hp_solutions_tolerance:
@@ -558,6 +540,7 @@ def calculate_min_hp(characters):
 
 def sort_and_limit_best_hp_solutions():
     global best_hp_solutions
+    global max_best_solutions
     global debug_depth
 
     best_hp_solutions.sort(key=lambda s: s["min_hp"])
@@ -580,9 +563,9 @@ def sort_and_limit_best_hp_solutions():
         high_hp = best_hp_solutions[cut_range_high_i]["min_hp"]
         low_mid_delta = mid_hp - low_hp
         mid_high_delta = high_hp - mid_hp
-        if low_mid_delta > mid_high_delta:
+        if low_mid_delta < mid_high_delta:
             cut_range_high_i = cut_range_mid_i
-        elif low_mid_delta < mid_high_delta:
+        elif low_mid_delta > mid_high_delta:
             cut_range_low_i = cut_range_mid_i
         else:
             # The halves are balanced, so randomly cut from the low or high side
@@ -634,6 +617,9 @@ def build_all_armor_combinations(type_group, type_name, assign_item_i, character
     for character in characters:
         if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
             continue
+        character_name = character["name"]
+        if "characters" in assign_item and not character_name in assign_item["characters"]:
+            continue
         item_char_possible_assignment = True
         for attr in required_attrs:
             if attr in assign_item:
@@ -654,7 +640,6 @@ def build_all_armor_combinations(type_group, type_name, assign_item_i, character
         character[assigned_key] = assign_item
 
         new_assignments = copy.copy(partial_assignment)
-        character_name = character["name"]
         assignment_key = f"{character_name} : {assigned_key}"
         new_assignments[assignment_key] = assign_item
         assignment_key_splits[assignment_key] = [character_name, assigned_key]
@@ -678,6 +663,8 @@ def any_assignable_gear(type_name, avail, min_item_i, characters):
 
         for character in characters:
             if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+                continue
+            if "characters" in assign_item and not character["name"] in assign_item["characters"]:
                 continue
             item_char_possible_assignment = True
             for attr in required_attrs:
@@ -909,9 +896,11 @@ def sort_best_solutions_min_variance_first():
         min_physical = calculate_min_physical(solution)
         min_magic = calculate_min_magic(solution)
         min_average = (min_physical + min_magic) / 2
+        min_hp = calculate_min_hp(solution)
         physical_sum_of_squares = 0
         magic_sum_of_squares = 0
         p_m_diff_sum_of_squares = 0
+        hp_sum_of_squares = 0
         for character in solution:
             physical_boost = character["physical"] - min_average
             physical_sum_of_squares += abs(physical_boost * physical_boost)
@@ -919,8 +908,11 @@ def sort_best_solutions_min_variance_first():
             magic_sum_of_squares += abs(magic_boost * magic_boost)
             p_m_diff = physical_boost - magic_boost
             p_m_diff_sum_of_squares += abs(p_m_diff * p_m_diff)
+            hp_boost = character["hp"] - min_hp
+            assert hp_boost >= 0
+            hp_sum_of_squares += hp_boost * hp_boost
         solution[0]["variance_sum_of_squares"] = (physical_sum_of_squares + magic_sum_of_squares
-                                                  + p_m_diff_sum_of_squares)
+                                                  + p_m_diff_sum_of_squares + hp_sum_of_squares)
 
     best_armor_solutions.sort(key=lambda s: s[0]["variance_sum_of_squares"])
 
