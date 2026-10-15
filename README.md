@@ -21,8 +21,8 @@ and nested dicts in python.  If you're here, you know what that means, and
 you'll figure it out.  :-D
 
 If a particular gear slot is already locked down, set it to None in the
-character record.  That means its armor values are already baked into the
-character baseline "physical" and "magic".  The script will treat those as
+character record.  That means its hp armor values are already baked into the
+character baseline "physical" "magic" and "hp".  The script will treat those as
 off-limits.  This is the mechanism for reducing search space and execution time
 as mentioned above.
 
@@ -30,8 +30,19 @@ Locking down particular gear assignments exponentially reduces the search space
 and with it execution time.  Use those wherever possible.  When you have meta
 constraints (like making sure a piece of gear with +1 strength or +1 warfare
 lands on your front line melee fighters), use the "characters": list to restrict
-a piece of gear to the characters who would benefit most.  That also
-exponentially reduces the search space.
+a piece of gear to the characters who would benefit most, or pre-assign it.
+That also exponentially reduces the search space.  If the script is getting
+bogged down in HP normalization (with log lines like the following),
+pre-assigning gear with hit point values will help.
+
+HP: d=5 t=3243.44695807 n=8187413 applying ring: LR to Lohse
+HP: d=5 t=3243.44734311 n=8187414 applying ring: LR to Fane
+
+Rings in particular are good targets.  Pick your two characters with the lowest
+HP, then pick from among your rings that grant the highest HP.  Of the two
+characters with the lowest HP, give the one with highest baseline magic armor
+the ring with the highest HP value, but lower magic armor value.  That will help
+smooth things out while reducing the search space.
 
 There are three command line option:
 
