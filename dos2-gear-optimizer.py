@@ -30,7 +30,7 @@ characters = [
         {"count": 1,
          "of": { # hydrosophist
             "helmet": ["CH"],
-            "ring": ["SM", "SR"]
+            "ring": ["SM", "ShinyR"]
          }
         }
      ]
@@ -62,7 +62,7 @@ characters = [
         {"count": 1,
          "of": { # hydrosophist
             "helmet": ["CH"],
-            "ring": ["SM", "SR"]
+            "ring": ["SM", "ShinyR"]
          }
         }
      ]
@@ -225,7 +225,7 @@ available_gear = [
     },
     {"type": "ring",
      "avail": [
-        {"name": "SR",
+        {"name": "SorcR",
          "physical": 0,
          "magic": 19,
          "hp": 0,
@@ -270,7 +270,7 @@ available_gear = [
          "magic": 11,
          "hp": 23,
         },
-        {"name": "SR",
+        {"name": "ShinyR",
          "physical": 0,
          "magic": 13,
          "hp": 17,
@@ -364,7 +364,17 @@ def main():
         raise KeyError(f"invalid argument {argv_copy[0]}") 
 
     if faster != 0 and more_thorough != 0:
-        raise Exception("--faster and --more-thorough are mutually exclusive")
+        raise KeyError("--faster and --more-thorough are mutually exclusive")
+
+    for type_group in available_gear:
+        avail = type_group["avail"]
+        for x in range(0, len(avail) - 1):
+            for y in range(x, len(avail)):
+                if avail[x]["name"] == avail[y]["name"]:
+                    if avail[x] != avail[y]:
+                        type_name = type_group["type"]
+                        item_name = avail[x]["name"]
+                        raise KeyError(f"{type_name} has multiple items named {item_name} but with non-identical stats")
 
     total_hp = 0
     max_hp = 0
