@@ -13,9 +13,11 @@ characters = [
      "finesse": 11,
      "intelligence": 11,
 
-     "physical": 138,
-     "magic": 85,
+     "physical": 161,
+     "magic": 90,
      "hp": 296,
+
+     "pants": None,
     },
     {"name": "The Red Prince",
      "strength": 13,
@@ -52,9 +54,11 @@ characters = [
      "finesse": 11,
      "intelligence": 15,
 
-     "physical": 9,
-     "magic": 71,
+     "physical": 14,
+     "magic": 96,
      "hp": 296,
+
+     "boots": None,
 
      "required": [
         {"count": 1,
@@ -161,6 +165,11 @@ available_gear = [
          "magic": 0,
          "hp": 15,
         },
+        {"name": "SS",
+         "physical": 18,
+         "magic": 0,
+         "hp": 47,
+        },
         {"name": "SB",
          "physical": 12,
          "magic": 0,
@@ -194,22 +203,10 @@ available_gear = [
          "hp": 0,
          "finesse": 12,
         },
-        {"name": "HSP",
-         "physical": 23,
-         "magic": 5,
-         "hp": 0,
-         "strength": 12,
-        },
      ]
     },
     {"type": "boots",
      "avail": [
-        {"name": "MB",
-         "physical": 5,
-         "magic": 25,
-         "hp": 0,
-         "intelligence": 12,
-        },
         {"name": "SS",
          "physical": 15,
          "magic": 3,
@@ -277,6 +274,7 @@ available_gear = [
      ]
     },
 ]
+
 
 required_attrs = set(["strength", "intelligence", "finesse"])
 
