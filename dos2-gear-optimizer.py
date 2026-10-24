@@ -9,247 +9,246 @@ import time
 
 characters = [
     {"name": "Brian",
-     "strength": 17,
-     "finesse": 10,
-     "intelligence": 10,
+     "strength": 18,
+     "finesse": 11,
+     "intelligence": 11,
 
-     "physical": 68,
-     "magic": 48,
-     "hp": 189,
-
-     "gloves": None,
-     "belt": None,
-     "ring1": None,
+     "physical": 138,
+     "magic": 85,
+     "hp": 296,
     },
     {"name": "The Red Prince",
-     "strength": 12,
-     "finesse": 10,
-     "intelligence": 10,
+     "strength": 13,
+     "finesse": 11,
+     "intelligence": 11,
 
-     "physical": 47,
-     "magic": 27,
-     "hp": 169,
+     "physical": 114,
+     "magic": 73,
+     "hp": 314,
 
-     "belt": None,
+     "required": [
+        {"count": 1,
+         "of": { # hydrosophist
+            "helmet": ["CH"],
+            "ring": ["SM", "SR"]
+         }
+        }
+     ]
     },
     {"name": "Lohse",
      "strength": 11,
-     "finesse": 10,
-     "intelligence": 14,
+     "finesse": 12,
+     "intelligence": 17,
 
-     "physical": 8,
-     "magic": 42,
-     "hp": 160,
+     "physical": 36,
+     "magic": 131,
+     "hp": 314,
 
-     "chest": None,
-     "necklace": None,
+     "helmet": None,
+     "boots": None,
     },
     {"name": "Fane",
-     "strength": 10,
-     "finesse": 10,
-     "intelligence": 14,
+     "strength": 13,
+     "finesse": 11,
+     "intelligence": 15,
 
-     "physical": 0,
-     "magic": 2,
-     "hp": 160,
+     "physical": 9,
+     "magic": 71,
+     "hp": 296,
 
-     "ring1": None,
+     "required": [
+        {"count": 1,
+         "of": { # hydrosophist
+            "helmet": ["CH"],
+            "ring": ["SM", "SR"]
+         }
+        }
+     ]
     },
 ]
 
 available_gear = [
     {"type": "helmet",
      "avail": [
+        {"name": "PH",
+         "physical": 20,
+         "magic": 4,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "Sk",
+         "physical": 4,
+         "magic": 17,
+         "hp": 0,
+        },
         {"name": "CH",
          "physical": 15,
          "magic": 3,
          "hp": 0,
-         "strength": 11,
-        },
-        {"name": "HoP",
-         "physical": 10,
-         "magic": 3,
-         "hp": 0,
-         "strength": 11,
         },
         {"name": "M",
          "physical": 3,
          "magic": 12,
          "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "SH",
-         "physical": 4,
-         "magic": 1,
-         "hp": 0,
-        },
-        {"name": "LH",
-         "physical": 3,
-         "magic": 2,
-         "hp": 0,
-        },
-     ]
-    },
-    {"type": "chest",
-     "avail": [
-        {"name": "MagM",
-         "physical": 3,
-         "magic": 18,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "MenM",
-         "physical": 4,
-         "magic": 16,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "LSA",
-         "physical": 16,
-         "magic": 4,
-         "hp": 0,
-         "strength": 11,
-        },
-        {"name": "MB",
-         "physical": 15,
-         "magic": 3,
-         "hp": 0,
-         "strength": 11,
         },
      ]
     },
     {"type": "gloves",
      "avail": [
+        {"name": "MSG",
+         "physical": 28,
+         "magic": 7,
+         "hp": 21,
+         "strength": 12,
+        },
+        {"name": "HoP",
+         "physical": 6,
+         "magic": 24,
+         "hp": 0,
+         "intelligence": 12,
+        },
+        {"name": "PG",
+         "physical": 20,
+         "magic": 4,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "MLSG",
+         "physical": 18,
+         "magic": 4,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "FG",
+         "physical": 13,
+         "magic": 7,
+         "hp": 0,
+         "finesse": 12,
+        },
         {"name": "SF",
          "physical": 3,
          "magic": 15,
          "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "WM",
-         "physical": 2,
-         "magic": 10,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "SSG",
-         "physical": 8,
-         "magic": 2,
-         "hp": 0,
-         "strength": 11,
         },
         {"name": "SG",
          "physical": 13,
          "magic": 2,
-         "hp": 0,
-         "strength": 11,
-        },
-        {"name": "WM",
-         "physical": 2,
-         "magic": 7,
          "hp": 0,
         },
      ]
     },
     {"type": "belt",
      "avail": [
+        {"name": "CC",
+         "physical": 18,
+         "magic": 0,
+         "hp": 18,
+         "characters": ["Brian"]   # Telekinesis
+        },
+        {"name": "BoV",
+         "physical": 20,
+         "magic": 0,
+         "hp": 0,
+         "characters": ["Lohse"]    # Barter
+        },
+        {"name": "LB",
+         "physical": 22,
+         "magic": 0,
+         "hp": 0,
+        },
+        {"name": "BoT",
+         "physical": 20,
+         "magic": 0,
+         "hp": 15,
+        },
         {"name": "SB",
          "physical": 12,
          "magic": 0,
          "hp": 20,
         },
-        {"name": "SS",
-         "physical": 18,
-         "magic": 0,
-         "hp": 32,
-        },
      ]
     },
     {"type": "pants",
      "avail": [
+        {"name": "ToS",
+         "physical": 10,
+         "magic": 48,
+         "hp": 17,
+         "intelligence": 12,
+        },
+        {"name": "AB",
+         "physical": 7,
+         "magic": 30,
+         "hp": 0,
+         "intelligence": 12,
+        },
+        {"name": "ILA",
+         "physical": 30,
+         "magic": 7,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "MB",
+         "physical": 19,
+         "magic": 11,
+         "hp": 0,
+         "finesse": 12,
+        },
         {"name": "HSP",
          "physical": 23,
          "magic": 5,
          "hp": 0,
          "strength": 12,
         },
-        {"name": "LHM",
-         "physical": 16,
-         "magic": 5,
-         "hp": 0,
-         "strength": 11,
-        },
-        {"name": "SSL",
-         "physical": 10,
-         "magic": 2,
-         "hp": 0,
-         "strength": 11,
-        },
-        {"name": "WL",
-         "physical": 3,
-         "magic": 9,
-         "hp": 0,
-        },
-        {"name": "RSP",
-         "physical": 8,
-         "magic": 2,
-         "hp": 0,
-        },
      ]
     },
     {"type": "boots",
      "avail": [
+        {"name": "MB",
+         "physical": 5,
+         "magic": 25,
+         "hp": 0,
+         "intelligence": 12,
+        },
         {"name": "SS",
          "physical": 15,
          "magic": 3,
          "hp": 0,
-         "strength": 11,
         },
-        {"name": "MS1",
+        {"name": "MS",
          "physical": 3,
          "magic": 12,
          "hp": 10,
-         "intelligence": 11,
-        },
-        {"name": "MS2",
-         "physical": 3,
-         "magic": 9,
-         "hp": 0,
-         "intelligence": 11,
-        },
-        {"name": "MS3",
-         "physical": 1,
-         "magic": 6,
-         "hp": 0,
-        },
-        {"name": "BSB",
-         "physical": 4,
-         "magic": 1,
-         "hp": 0,
-        },
-     ]
-    },
-    {"type": "necklace",
-     "avail": [
-        {"name": "PN",
-         "physical": 0,
-         "magic": 14,
-         "hp": 0,
-        },
-        {"name": "AD",
-         "physical": 0,
-         "magic": 12,
-         "hp": 10,
-        },
-        {"name": "AV",
-         "physical": 0,
-         "magic": 11,
-         "hp": 0,
         },
      ]
     },
     {"type": "ring",
      "avail": [
+        {"name": "SR",
+         "physical": 0,
+         "magic": 19,
+         "hp": 0,
+        },
+        {"name": "DC",
+         "physical": 0,
+         "magic": 17,
+         "hp": 0,
+        },
+        {"name": "BR",
+         "physical": 0,
+         "magic": 15,
+         "hp": 34,
+        },
+        {"name": "MBR",
+         "physical": 0,
+         "magic": 15,
+         "hp": 0,
+        },
+        {"name": "MBR",
+         "physical": 0,
+         "magic": 15,
+         "hp": 0,
+        },
         {"name": "KP",
          "physical": 0,
          "magic": 14,
@@ -260,25 +259,20 @@ available_gear = [
          "magic": 14,
          "hp": 0,
         },
-        {"name": "ASR",
+        {"name": "RR",
          "physical": 0,
-         "magic": 8,
+         "magic": 13,
          "hp": 0,
         },
-        {"name": "ASR",
+        {"name": "FiF",
          "physical": 0,
-         "magic": 8,
-         "hp": 0,
+         "magic": 11,
+         "hp": 23,
         },
-        {"name": "LR",
+        {"name": "SR",
          "physical": 0,
-         "magic": 6,
-         "hp": 15,
-        },
-        {"name": "DR",
-         "physical": 0,
-         "magic": 6,
-         "hp": 0,
+         "magic": 13,
+         "hp": 17,
         },
      ]
     },
@@ -386,6 +380,15 @@ def main():
         total_hp += character["hp"]
         if max_hp < character["hp"]:
             max_hp = character["hp"]
+        if "required" in character:
+            for required_item_group in character["required"]:
+                for required_item_type in required_item_group["of"]:
+                    if (    required_item_type in character or
+                            (required_item_type == "ring" and "ring1" in character and "ring2" in character) ):
+                        character_name = character["name"]
+                        raise KeyError(f"{character_name} skill requirement option {required_item_type} is impossibe "
+                                       "because that item type is pre-allocated")
+    
     average_hp = total_hp / len(characters)
     min_best_hp_solutions_tolerance = average_hp / max_hp
     if best_hp_solutions_tolerance < min_best_hp_solutions_tolerance:
@@ -416,7 +419,7 @@ def main():
         print(f"\nEvaluating armor for HP solution {hp_i+1}/{len(best_hp_solutions)}\n")
         hp_solution = best_hp_solutions[hp_i]
         available_gear = hp_solution["available_gear"]
-        available_gear.sort(key=lambda s: gear_armor_value_spread(s), reverse=True)
+        available_gear.sort(key=lambda s: gear_armor_value_spread_and_constraints(s), reverse=True)
         characters = hp_solution["characters"]
         for type_group in available_gear:
             type_name = type_group["type"]
@@ -447,7 +450,8 @@ def main():
             hp = character["hp"]
             print(f"hp: {hp}")
             for key in character:
-                if key in set(["name", "physical", "magic", "hp", "variance_sum_of_squares"]) or key in required_attrs:
+                if (    key in set(["name", "physical", "magic", "hp", "required", "variance_sum_of_squares"]) or
+                        key in required_attrs ):
                     continue
                 item_type = key
                 item = character[key]
@@ -561,7 +565,7 @@ def characters_sig(characters):
                 ring2 = temp
 
         for key in keys:
-            if key in set(["name", "physical", "magic", "hp"]) or key in required_attrs:
+            if key in set(["name", "physical", "magic", "hp", "required"]) or key in required_attrs:
                 continue
             item = character[key]
             if item == None:
@@ -711,7 +715,9 @@ def limit_best_hp_solutions(limit, depth):
         print(f"best_hp_solutions: d={depth} count={len(best_hp_solutions)}, n={total_permutations} "
               f"t={elapsed_time:.8f}: [{values}]")
 
-def gear_armor_value_spread(type_group):
+def gear_armor_value_spread_and_constraints(type_group):
+    global characters
+
     avail = type_group["avail"]
     if len(type_group) < 2:
         return 0
@@ -719,6 +725,7 @@ def gear_armor_value_spread(type_group):
     max_physical = min_physical
     min_magic = avail[0]["magic"]
     max_magic = min_magic
+
     for i in range(1, len(avail)):
         physical = avail[i]["physical"]
         if min_physical > physical:
@@ -730,9 +737,19 @@ def gear_armor_value_spread(type_group):
             min_magic = magic
         if max_magic < magic:
             max_magic = magic
+
+    skill_need_constraints = 0
+    for character in characters:
+        if "required" in character:
+            for required_item_group in character["required"]:
+                for required_item_type in required_item_group["of"]:
+                    if required_item_type == type_group["type"]:
+                        item_options_list = required_item_group["of"][required_item_type]
+                        skill_need_constraints += len(item_options_list)
+
     physical_spread = max_physical - min_physical
     magic_spread = max_magic - min_magic
-    return max(physical_spread, magic_spread)
+    return max(physical_spread, magic_spread) * (1 + 2 * skill_need_constraints)
 
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
@@ -909,6 +926,42 @@ def is_dead_branch_armor(min_type_group_i, characters):
         max_character_magic = character["magic"]
         max_character_physical_cofactor_magic = max_character_magic
         max_character_magic_cofactor_physical = max_character_physical
+
+        if "required" in character:
+            for required_item_group in character["required"]:
+                required_count = required_item_group["count"]
+                count = 0
+                for required_item_type in required_item_group["of"]:
+                    if required_item_type != "ring":
+                        if required_item_type in character:
+                            assigned_item_name = character[required_item_type]["name"]
+                            for item_option in required_item_group["of"][required_item_type]:
+                                if assigned_item_name == item_option:
+                                    count += 1
+                                    break
+                    else:
+                        ring_options = required_item_group["of"]["ring"]
+                        ring_slots = ["ring1", "ring2"]
+                        for ring_slot in ring_slots:
+                            if ring_slot in character:
+                                assigned_item_name = character[ring_slot]["name"]
+                                for item_option in ring_options:
+                                    if assigned_item_name == item_option:
+                                        count += 1
+                                        break
+
+                if count < required_count:
+                    # See if items to satisfy that requirement remain available at or beyond min_type_group_i
+                    type_group_i = min_type_group_i
+                    while type_group_i < len(available_gear):
+                        if available_gear[type_group_i]["type"] in required_item_group["of"]:
+                            count += 1
+                        type_group_i += 1
+
+                if count < required_count:
+                    # That skill requirement cannot be satisfied, so this is a dead branch
+                    return True
+
         type_group_i = min_type_group_i
         while type_group_i < len(available_gear):
             type_group = available_gear[type_group_i]
