@@ -557,6 +557,8 @@ available_gear = [
 required_attrs = set(["strength", "intelligence", "finesse"])
 allowed_bonuses = set(["aerothurge", "geomancer", "hydrosophist", "pyrokinetic",
                        "huntsman", "necromancer", "scoundrel", "summoning"])
+character_allowed_gear = set(["helmet", "chest", "gloves", "belt", "pants", "boots", "necklace", "ring1", "ring2"])
+available_gear_allowed_types = set(["helmet", "chest", "gloves", "belt", "pants", "boots", "necklace", "ring"])
 
 best_hp_solutions = sortedcontainers.SortedList(key=lambda s: (s["min_hp"], s["gen#"]))
 # = [
@@ -645,25 +647,28 @@ def main():
         raise KeyError("--faster and --more-thorough are mutually exclusive")
 
     for type_group in available_gear:
+        type_name = type_group["type"]
+        if type_name not in available_gear_allowed_types:
+            raise KeyError(f"{type_name} is not recognized")
         avail = type_group["avail"]
         for item in avail:
             if "bonuses" in item:
                 for key in item["bonuses"]:
                     if not key in allowed_bonuses:
-                        type_name = type_group["type"]
                         item_name = item["name"]
                         raise KeyError(f"{type_name}: {item_name} has an unrecognized bonus {key}")
         for x in range(0, len(avail) - 1):
             for y in range(x, len(avail)):
                 if avail[x]["name"] == avail[y]["name"]:
                     if avail[x] != avail[y]:
-                        type_name = type_group["type"]
                         item_name = avail[x]["name"]
                         raise KeyError(f"{type_name} has multiple items named {item_name} but with non-identical stats")
 
     total_hp = 0
     max_hp = 0
     for character in characters:
+        character_name = character["name"]
+
         required_properties = copy.copy(required_attrs)
         required_properties.add("name")
         required_properties.add("physical")
@@ -679,8 +684,13 @@ def main():
         if "required_bonuses" in character:
             for key in character["required_bonuses"]:
                 if not key in allowed_bonuses:
-                    name = character["name"]
-                    raise KeyError(f"{name} has an unrecognized required_bonuses {key}")
+                    raise KeyError(f"{character_name} has an unrecognized required_bonuses {key}")
+        allowed_keys = required_properties | character_allowed_gear
+        allowed_keys.add("required_bonuses")
+        for key in character:
+            if not key in allowed_keys:
+                raise KeyError(f"{character_name} has an unrecognized key {key}")
+
     
     average_hp = total_hp / len(characters)
     min_best_hp_solutions_tolerance = average_hp / max_hp
