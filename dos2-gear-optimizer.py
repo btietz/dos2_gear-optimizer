@@ -9,99 +9,236 @@ import time
 
 characters = [
     {"name": "Brian",
-     "strength": 18,
+     "strength": 20,
      "finesse": 11,
      "intelligence": 11,
 
-     "physical": 138,
-     "magic": 85,
-     "hp": 296,
+     "physical": 185,
+     "magic": 137,
+     "hp": 448,
+
+     "boots": None,
+     "necklace": None,
+
+     "required_bonuses": {
+         "aerothurge": 1,
+     },
     },
     {"name": "The Red Prince",
      "strength": 13,
      "finesse": 11,
      "intelligence": 11,
 
-     "physical": 114,
-     "magic": 73,
-     "hp": 314,
+     "physical": 155,
+     "magic": 172,
+     "hp": 546,
 
-     "required": [
-        {"count": 1,
-         "of": { # hydrosophist
-            "helmet": ["CH"],
-            "ring": ["SM", "ShinyR"]
-         }
-        }
-     ]
+     "boots": None,
+     "ring1": None,
+
+     "required_bonuses": {
+         "hydrosophist": 1,
+         "summoning": 1,
+     },
     },
     {"name": "Lohse",
      "strength": 11,
      "finesse": 12,
-     "intelligence": 17,
+     "intelligence": 14,
 
-     "physical": 36,
+     "physical": 70,
      "magic": 131,
-     "hp": 314,
+     "hp": 424,
 
      "helmet": None,
+     "chest": None,
+     "belt": None,
      "boots": None,
+     "ring1": None,
     },
     {"name": "Fane",
-     "strength": 13,
-     "finesse": 11,
-     "intelligence": 15,
+     "strength": 11,
+     "finesse": 12,
+     "intelligence": 16,
 
-     "physical": 14,
-     "magic": 96,
-     "hp": 296,
+     "physical": 89,
+     "magic": 169,
+     "hp": 507,
 
-     "boots": None,
+     "chest": None,
+     "pants": None,
+     "gloves": None,
+     "ring2": None,
 
-     "required": [
-        {"count": 1,
-         "of": { # hydrosophist
-            "helmet": ["CH"],
-            "ring": ["SM", "ShinyR"]
-         }
-        }
-     ]
+     "required_bonuses": {
+         "hydrosophist": 2,
+     },
     },
 ]
 
 available_gear = [
     {"type": "helmet",
      "avail": [
+        {"name": "MH1",
+         "physical": 10,
+         "magic": 44,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "pyrokinetic": 1,
+         },
+        },
+        {"name": "MSH",
+         "physical": 44,
+         "magic": 10,
+         "hp": 0,
+         "strength": 12,
+         "bonuses" : {
+             "hydrosophist": 1,
+             "necromancer": 1,
+         },
+        },
+        {"name": "MMH1",
+         "physical": 25,
+         "magic": 16,
+         "hp": 0,
+         "finesse": 12,
+         "bonuses" : {
+             "necromancer": 1,
+             "summoning": 1,
+         },
+        },
+        {"name": "BoI",
+         "physical": 7,
+         "magic": 30,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "hydrosophist": 1,
+             "aerothurge": 1,
+         },
+        },
+        {"name": "MH2",
+         "physical": 7,
+         "magic": 28,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "pyrokinetic": 1,
+         },
+        },
         {"name": "PH",
          "physical": 20,
          "magic": 4,
          "hp": 0,
          "strength": 12,
         },
+        {"name": "MMH2",
+         "physical": 13,
+         "magic": 9,
+         "hp": 0,
+         "finesse": 12,
+         "bonuses" : {
+             "geomancer": 1,
+         },
+        },
         {"name": "Sk",
          "physical": 4,
          "magic": 17,
          "hp": 0,
+         "bonuses" : {
+             "summoning": 1,
+         },
         },
         {"name": "CH",
          "physical": 15,
          "magic": 3,
          "hp": 0,
+         "bonuses" : {
+             "hydrosophist": 1,
+         },
         },
-        {"name": "M",
-         "physical": 3,
+     ]
+    },
+    {"type": "chest",
+     "avail": [
+# Pre-assigned to Fane:
+#        {"name": "DD",
+#         "physical": 14,
+#         "magic": 93,
+#         "hp": 24,
+#         "intelligence": 12,
+#         "bonuses" : {
+#             "necromancer": 1,
+#         },
+#        },
+        {"name": "CoC",
+         "physical": 16,
+         "magic": 83,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "pyrokinetic": 1,
+             "hydrosophist": 1,
+         },
+        },
+        {"name": "SA1",
+         "physical": 68,
          "magic": 12,
          "hp": 0,
+         "strength": 12,
+        },
+        {"name": "SA2",
+         "physical": 66,
+         "magic": 13,
+         "hp": 0,
+         "strength": 12,
+        },
+        {"name": "FMC",
+         "physical": 55,
+         "magic": 11,
+         "hp": 24,
+         "strength": 12,
+         "bonuses" : {
+             "aerothurge": 1,
+             "necromancer": 1,
+         },
         },
      ]
     },
     {"type": "gloves",
      "avail": [
-        {"name": "MSG",
+        {"name": "GoA-Thievery",
+         "physical": 13,
+         "magic": 7,
+         "hp": 0,
+         "finesse": 12,
+         "characters": ["Lohse"],    # Thievery
+        },
+        {"name": "MSG1",
+         "physical": 44,
+         "magic": 10,
+         "hp": 0,
+         "strength": 12,
+        },
+# Pre-assigned to Fane:
+#        {"name": "MCG",
+#         "physical": 25,
+#         "magic": 16,
+#         "hp": 0,
+#         "finesse": 12,
+#        },
+        {"name": "MSG2",
          "physical": 28,
          "magic": 7,
          "hp": 21,
          "strength": 12,
+        },
+        {"name": "DH",
+         "physical": 7,
+         "magic": 28,
+         "hp": 0,
+         "intelligence": 12,
         },
         {"name": "HoP",
          "physical": 6,
@@ -109,49 +246,28 @@ available_gear = [
          "hp": 0,
          "intelligence": 12,
         },
-        {"name": "PG",
-         "physical": 20,
-         "magic": 4,
-         "hp": 0,
-         "strength": 12,
-        },
-        {"name": "MLSG",
+        {"name": "MG",
          "physical": 18,
-         "magic": 4,
-         "hp": 0,
-         "strength": 12,
-        },
-        {"name": "FG",
-         "physical": 13,
-         "magic": 7,
+         "magic": 11,
          "hp": 0,
          "finesse": 12,
-        },
-        {"name": "SF",
-         "physical": 3,
-         "magic": 15,
-         "hp": 0,
-        },
-        {"name": "SG",
-         "physical": 13,
-         "magic": 2,
-         "hp": 0,
         },
      ]
     },
     {"type": "belt",
      "avail": [
-        {"name": "CC",
+# Pre-assigned to Lohse:
+#        {"name": "LB-Barter",
+#         "physical": 34,
+#         "magic": 0,
+#         "hp": 0,
+#         "characters": ["Lohse"],   # Barter
+#        },
+        {"name": "CC-Telekinesis",
          "physical": 18,
          "magic": 0,
-         "hp": 18,
-         "characters": ["Brian"]   # Telekinesis
-        },
-        {"name": "BoV",
-         "physical": 20,
-         "magic": 0,
-         "hp": 0,
-         "characters": ["Lohse"]    # Barter
+         "hp": 24,
+         "characters": ["Brian"],   # Telekinesis
         },
         {"name": "LB",
          "physical": 22,
@@ -166,7 +282,7 @@ available_gear = [
         {"name": "SS",
          "physical": 18,
          "magic": 0,
-         "hp": 47,
+         "hp": 62,
         },
         {"name": "SB",
          "physical": 12,
@@ -177,19 +293,38 @@ available_gear = [
     },
     {"type": "pants",
      "avail": [
-        {"name": "ToS",
-         "physical": 10,
-         "magic": 48,
-         "hp": 17,
-         "intelligence": 12,
+# Pre-assigned to Fane:
+#        {"name": "MLB",
+#         "physical": 50,
+#         "magic": 32,
+#         "hp": 0,
+#         "finesse": 12,
+#        },
+        {"name": "ILA1",
+         "physical": 57,
+         "magic": 12,
+         "hp": 0,
+         "strength": 12,
         },
-        {"name": "AB",
-         "physical": 7,
-         "magic": 30,
+        {"name": "ToT",
+         "physical": 12,
+         "magic": 57,
          "hp": 0,
          "intelligence": 12,
         },
-        {"name": "ILA",
+        {"name": "PoM",
+         "physical": 38,
+         "magic": 27,
+         "hp": 0,
+         "finesse": 12,
+        },
+        {"name": "ToS",
+         "physical": 10,
+         "magic": 48,
+         "hp": 24,
+         "intelligence": 12,
+        },
+        {"name": "ILA2",
          "physical": 30,
          "magic": 7,
          "hp": 0,
@@ -201,85 +336,227 @@ available_gear = [
          "hp": 0,
          "finesse": 12,
         },
-        {"name": "HSP",
-         "physical": 23,
-         "magic": 5,
-         "hp": 0,
-         "strength": 12,
-        },
      ]
     },
     {"type": "boots",
      "avail": [
-        {"name": "SS",
-         "physical": 15,
+# Pre-assigned to The Red Prince:
+#        {"name": "S",
+#         "physical": 46,
+#         "magic": 10,
+#         "hp": 0,
+#         "strength": 12,
+#        },
+# Pre-assigned to Brian:
+#        {"name": "SS",
+#         "physical": 37,
+#         "magic": 9,
+#         "hp": 0,
+#         "strength": 12,
+#        },
+        {"name": "TB",
+         "physical": 18,
          "magic": 3,
          "hp": 0,
+         "finesse": 12,
         },
-        {"name": "MS",
-         "physical": 3,
-         "magic": 12,
-         "hp": 10,
+        {"name": "MB",
+         "physical": 5,
+         "magic": 25,
+         "hp": 0,
+         "intelligence": 12,
+        },
+     ]
+    },
+    {"type": "necklace",
+     "avail": [
+        {"name": "AD",
+         "physical": 0,
+         "magic": 40,
+         "hp": 0,
+         "characters": ["Fane"],   # Loremaster
+         "bonuses" : {
+             "necromancer": 1,
+         },
+        },
+        {"name": "CCA",
+         "physical": 0,
+         "magic": 47,
+         "hp": 0,
+         "characters": ["Lohse"],   # Lucky charm
+         "bonuses" : {
+             "necromancer": 1,
+         },
+        },
+        {"name": "TFS",
+         "physical": 0,
+         "magic": 39,
+         "hp": 24,
+         "characters": ["Lohse"],   # Barter
+         "bonuses" : {
+             "necromancer": 1,
+         },
+        },
+# Pre-assigned to Brian:
+#        {"name": "MA",
+#         "physical": 0,
+#         "magic": 42,
+#         "hp": 24,
+#         "bonuses" : {
+#             "necromancer": 1,
+#         },
+#        },
+        {"name": "FN",
+         "physical": 0,
+         "magic": 40,
+         "hp": 0,
+         "bonuses" : {
+             "geomancer": 1,
+         },
+        },
+        {"name": "WA",
+         "physical": 0,
+         "magic": 26,
+         "hp": 0,
+        },
+        {"name": "AoC",
+         "physical": 0,
+         "magic": 26,
+         "hp": 0,
+         "bonuses" : {
+             "hydrosophist": 1,
+         },
+        },
+        {"name": "T",
+         "physical": 0,
+         "magic": 23,
+         "hp": 0,
+         "bonuses" : {
+             "hydrosophist": 1,
+         },
+        },
+        {"name": "NotS",
+         "physical": 0,
+         "magic": 16,
+         "hp": 0,
+         "bonuses" : {
+             "aerothurge": 1,
+         },
         },
      ]
     },
     {"type": "ring",
      "avail": [
-        {"name": "SorcR",
+# Pre-assigned to The Red Prince:
+#        {"name": "BS",
+#         "physical": 0,
+#         "magic": 87,
+#         "hp": 122,
+#         "bonuses" : {
+#             "necromancer": 1,
+#         },
+#        },
+# Pre-assigned to Lohse:
+#        {"name": "HR1",
+#         "physical": 0,
+#         "magic": 39,
+#         "hp": 0,
+#        },
+        {"name": "GR",
+         "physical": 0,
+         "magic": 36,
+         "hp": 0,
+         "bonuses" : {
+             "hydrosophist": 1,
+             "necromancer": 1,
+         },
+        },
+        {"name": "SR1",
+         "physical": 0,
+         "magic": 28,
+         "hp": 0,
+         "bonuses" : {
+             "geomancer": 1,
+             "necromancer": 1,
+         },
+        },
+        {"name": "HR2",
+         "physical": 0,
+         "magic": 28,
+         "hp": 0,
+         "bonuses" : {
+             "pyrokinetic": 1,
+             "necromancer": 1,
+         },
+        },
+# Pre-assigned to Fane:
+#        {"name": "DR",
+#         "physical": 0,
+#         "magic": 28,
+#         "hp": 0,
+#         "bonuses" : {
+#             "scoundrel": 1,
+#             "hydrosophist": 1,
+#         },
+#        },
+        {"name": "SR2",
          "physical": 0,
          "magic": 19,
          "hp": 0,
         },
-        {"name": "DC",
+        {"name": "BR1",
          "physical": 0,
-         "magic": 17,
+         "magic": 18,
          "hp": 0,
+         "bonuses" : {
+             "aerothurge": 1,
+             "necromancer": 1,
+         },
         },
-        {"name": "BR",
+        {"name": "SR3",
+         "physical": 0,
+         "magic": 18,
+         "hp": 0,
+         "bonuses" : {
+             "hydrosophist": 1,
+         },
+        },
+        {"name": "BR2",
          "physical": 0,
          "magic": 15,
          "hp": 34,
-        },
-        {"name": "MBR",
-         "physical": 0,
-         "magic": 15,
-         "hp": 0,
-        },
-        {"name": "MBR",
-         "physical": 0,
-         "magic": 15,
-         "hp": 0,
         },
         {"name": "KP",
          "physical": 0,
          "magic": 14,
          "hp": 28,
+         "bonuses" : {
+             "pyrokinetic": 2,
+         },
         },
-        {"name": "SM",
-         "physical": 0,
-         "magic": 14,
-         "hp": 0,
-        },
-        {"name": "RR",
+        {"name": "SR4",
          "physical": 0,
          "magic": 13,
-         "hp": 0,
+         "hp": 24,
+         "bonuses" : {
+             "hydrosophist": 1,
+         },
         },
         {"name": "FiF",
          "physical": 0,
          "magic": 11,
          "hp": 23,
-        },
-        {"name": "ShinyR",
-         "physical": 0,
-         "magic": 13,
-         "hp": 17,
+         "bonuses" : {
+             "summoning": 2,
+         },
         },
      ]
     },
 ]
 
 required_attrs = set(["strength", "intelligence", "finesse"])
+allowed_bonuses = set(["aerothurge", "geomancer", "hydrosophist", "pyrokinetic",
+                       "huntsman", "necromancer", "scoundrel", "summoning"])
 
 best_hp_solutions = sortedcontainers.SortedList(key=lambda s: (s["min_hp"], s["gen#"]))
 # = [
@@ -304,6 +581,7 @@ cofactor_threshold = 0.949
 cofactor_engaged = False
 assignment_key_splits = {}
 debug_depth = 0
+dead_branch_armor_efficacy = [0,0]
 
 start_time = time.time()
 
@@ -368,6 +646,13 @@ def main():
 
     for type_group in available_gear:
         avail = type_group["avail"]
+        for item in avail:
+            if "bonuses" in item:
+                for key in item["bonuses"]:
+                    if not key in allowed_bonuses:
+                        type_name = type_group["type"]
+                        item_name = item["name"]
+                        raise KeyError(f"{type_name}: {item_name} has an unrecognized bonus {key}")
         for x in range(0, len(avail) - 1):
             for y in range(x, len(avail)):
                 if avail[x]["name"] == avail[y]["name"]:
@@ -391,14 +676,11 @@ def main():
         total_hp += character["hp"]
         if max_hp < character["hp"]:
             max_hp = character["hp"]
-        if "required" in character:
-            for required_item_group in character["required"]:
-                for required_item_type in required_item_group["of"]:
-                    if (    required_item_type in character or
-                            (required_item_type == "ring" and "ring1" in character and "ring2" in character) ):
-                        character_name = character["name"]
-                        raise KeyError(f"{character_name} skill requirement option {required_item_type} is impossibe "
-                                       "because that item type is pre-allocated")
+        if "required_bonuses" in character:
+            for key in character["required_bonuses"]:
+                if not key in allowed_bonuses:
+                    name = character["name"]
+                    raise KeyError(f"{name} has an unrecognized required_bonuses {key}")
     
     average_hp = total_hp / len(characters)
     min_best_hp_solutions_tolerance = average_hp / max_hp
@@ -424,7 +706,15 @@ def main():
     })
     hp_solution_sigs = set()
     build_all_hp_solutions(characters, available_gear, hp_solution_sigs, 0)
-    limit_best_hp_solutions(max_best_solutions, 1000000)
+    if len(best_hp_solutions) == 0:
+        best_hp_solutions.add({
+            "characters": copy.deepcopy(characters),
+            "available_gear": copy.deepcopy(available_gear),
+            "min_hp": calculate_min_hp(characters),
+            "gen#": total_permutations,
+        })
+    else:
+        limit_best_hp_solutions(max_best_solutions, None)
 
     for hp_i in range(0, len(best_hp_solutions)):
         print(f"\nEvaluating armor for HP solution {hp_i+1}/{len(best_hp_solutions)}\n")
@@ -447,6 +737,8 @@ def main():
 
         apply_all_armor_combinations(0, characters, 0)
 
+    print()
+    print(f"dead_branch_armor_efficacy: [{dead_branch_armor_efficacy[0]}/{dead_branch_armor_efficacy[1]}]")
     sort_best_solutions_min_variance_first()
 
     for i in range(0, min(len(best_armor_solutions), 8)):
@@ -461,8 +753,8 @@ def main():
             hp = character["hp"]
             print(f"hp: {hp}")
             for key in character:
-                if (    key in set(["name", "physical", "magic", "hp", "required", "variance_sum_of_squares"]) or
-                        key in required_attrs ):
+                if (    key in set(["name", "physical", "magic", "hp", "required_bonuses", "variance_sum_of_squares"])
+                    or  key in required_attrs ):
                     continue
                 item_type = key
                 item = character[key]
@@ -518,12 +810,16 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
                 character["hp"] += assign_item["hp"]
                 character["physical"] += assign_item["physical"]
                 character["magic"] += assign_item["magic"]
+                if "required_bonuses" in character and "bonuses" in assign_item:
+                    for bonus_name in assign_item["bonuses"]:
+                        if bonus_name in character["required_bonuses"]:
+                            character["required_bonuses"][bonus_name] -= assign_item["bonuses"][bonus_name]
                 avail.pop(avail_i)
                 if len(avail) == 0:
                     available_gear.pop(type_group_i)
 
                 sig = characters_sig(characters)
-                if not (sig in hp_solution_sigs or is_dead_branch_hp(characters, available_gear)):
+                if not sig in hp_solution_sigs:
                     total_permutations += 1
                     hp_solution_sigs.add(sig)
 
@@ -542,6 +838,10 @@ def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
                 character["hp"] -= assign_item["hp"]
                 character["physical"] -= assign_item["physical"]
                 character["magic"] -= assign_item["magic"]
+                if "required_bonuses" in character and "bonuses" in assign_item:
+                    for bonus_name in assign_item["bonuses"]:
+                        if bonus_name in character["required_bonuses"]:
+                            character["required_bonuses"][bonus_name] += assign_item["bonuses"][bonus_name]
                 del character[assigned_key]
 
 def characters_sig(characters):
@@ -576,7 +876,7 @@ def characters_sig(characters):
                 ring2 = temp
 
         for key in keys:
-            if key in set(["name", "physical", "magic", "hp", "required"]) or key in required_attrs:
+            if key in set(["name", "physical", "magic", "hp", "required_bonuses"]) or key in required_attrs:
                 continue
             item = character[key]
             if item == None:
@@ -601,48 +901,14 @@ def characters_sig(characters):
     assert sig != ""
     return sig
 
-def is_dead_branch_hp(characters, available_gear):
-    global best_hp_solutions
-    global max_temp_hp_solutions
-    global best_hp_solutions_tolerance
-    global required_attrs
-
-    if len(best_hp_solutions) < max_temp_hp_solutions:
-        # Don't start dead branch pruning until the HP solutions are adequately seeded
-        return False
-
-    required_min = calculate_min_hp(best_hp_solutions[-1]["characters"]) * best_hp_solutions_tolerance
-    for character in characters:
-        character_name = character["name"]
-        max_character_hp = character["hp"]
-        for type_group in available_gear:
-            best_add_hp_for_type_group = 0
-            for item in type_group["avail"]:
-                if item["hp"] == 0:
-                    continue
-                if "characters" in item and not character_name in item["characters"]:
-                    continue
-                item_char_possible_assignment = True
-                for attr in required_attrs:
-                    if attr in item:
-                        if character[attr] < item[attr]:
-                            item_char_possible_assignment = False
-                            break
-                if item_char_possible_assignment:
-                    if best_add_hp_for_type_group < item["hp"]:
-                        best_add_hp_for_type_group = item["hp"]
-            max_character_hp += best_add_hp_for_type_group
-
-        if max_character_hp < required_min:
-            return True
-
-    return False
-
 def evaluate_for_hp(characters, available_gear, depth):
     global start_time
     global best_hp_solutions
     global best_hp_solutions_tolerance
     global max_temp_hp_solutions
+
+    if not can_satisfy_bonuses_hp(characters, available_gear):
+        return
 
     existing_best_min = best_hp_solutions[-1]["min_hp"]
     new_min = calculate_min_hp(characters)
@@ -660,6 +926,81 @@ def evaluate_for_hp(characters, available_gear, depth):
             print(f"min: {new_min} t={elapsed_time:.8f}, count={len(best_hp_solutions)}")
             print(f"{best_hp_solutions}")
         return
+
+def can_satisfy_bonuses_hp(characters, available_gear):
+    global required_attrs
+
+    for character in characters:
+        if "required_bonuses" in character:
+            for bonus_name in character["required_bonuses"]:
+                need = character["required_bonuses"][bonus_name]
+                if need > 0:
+                    max_add_bonus = 0
+                    for type_group in available_gear:
+                        type_name = type_group["type"]
+                        if type_name != "ring":
+                            if type_name in character:
+                                continue
+                        else:
+                            ring1_max = 0
+                            ring2_max = 0
+                            if "ring1" in character:
+                                ring1_max = None
+                            if "ring2" in character:
+                                ring2_max = None
+                                if ring1_max == None:
+                                    # This character can't take any more rings
+                                    continue
+
+                        avail = type_group["avail"]
+                        best_add_bonus_for_type = 0
+                        for item in avail:
+                            if not "bonuses" in item:
+                                continue
+                            if not bonus_name in item["bonuses"]:
+                                continue
+                            if "characters" in item and not character["name"] in item["characters"]:
+                                continue
+
+                            allowed_for_character_attrs = True
+                            for attr in required_attrs:
+                                if attr in item and character[attr] < item[attr]:
+                                    allowed_for_character_attrs = False
+                                    break
+                            if not allowed_for_character_attrs:
+                                continue
+
+                            item_skill_bonus = item["bonuses"][bonus_name]
+                            if type_name != "ring":
+                                if best_add_bonus_for_type < item_skill_bonus:
+                                    best_add_bonus_for_type = item_skill_bonus
+                            else:
+                                if ring1_max == 0:
+                                    ring1_max = item_skill_bonus
+                                elif ring2_max == 0:
+                                    ring2_max = item_skill_bonus
+                                elif (ring1_max is not None and ring1_max < item_skill_bonus and
+                                        (ring2_max is None or ring1_max < ring2_max)):
+                                    ring1_max = item_skill_bonus
+                                elif (ring2_max is not None and ring2_max < item_skill_bonus and
+                                        (ring1_max is None or ring2_max < ring1_max)):
+                                    ring2_max = item_skill_bonus
+
+                                max_ring_bonus = 0
+                                if ring1_max != None:
+                                    max_ring_bonus = ring1_max
+                                if ring2_max != None:
+                                    max_ring_bonus += ring2_max
+
+                                if best_add_bonus_for_type < max_ring_bonus:
+                                    best_add_bonus_for_type = max_ring_bonus
+
+                        max_add_bonus += best_add_bonus_for_type
+
+                    if max_add_bonus < need:
+                        return False
+
+    return True
 
 def calculate_min_hp(characters):
     result = characters[0]["hp"]
@@ -698,14 +1039,14 @@ def limit_best_hp_solutions(limit, depth):
             elif low_mid_delta > mid_high_delta:
                 cut_range_low_i = cut_range_mid_i
             else:
-                # The halves are balanced, so randomly cut from the low or high side.  The 1:2 ratio corrects for recency
-                # bias, for a better sampling of seed HP solutions to feed into the armor values leveling.
+                # The halves are balanced, so randomly cut from the low or high side.  The 1:2 ratio corrects for
+                # recency bias, for a better sampling of seed HP solutions to feed into the armor values leveling.
                 if random.randint(0, 2) != 0:
                     cut_range_low_i = cut_range_mid_i
                 else:
                     cut_range_high_i = cut_range_mid_i
 
-    if depth <= debug_depth:
+    if depth != None and depth <= debug_depth:
         value = best_hp_solutions[0]["min_hp"]
         values = f"{value}"
         if len(best_hp_solutions) < 9:
@@ -737,6 +1078,7 @@ def gear_armor_value_spread_and_constraints(type_group):
     min_magic = avail[0]["magic"]
     max_magic = min_magic
 
+    bonuses = 0
     for i in range(1, len(avail)):
         physical = avail[i]["physical"]
         if min_physical > physical:
@@ -748,19 +1090,12 @@ def gear_armor_value_spread_and_constraints(type_group):
             min_magic = magic
         if max_magic < magic:
             max_magic = magic
-
-    skill_need_constraints = 0
-    for character in characters:
-        if "required" in character:
-            for required_item_group in character["required"]:
-                for required_item_type in required_item_group["of"]:
-                    if required_item_type == type_group["type"]:
-                        item_options_list = required_item_group["of"][required_item_type]
-                        skill_need_constraints += len(item_options_list)
+        if "bonuses" in avail[i]:
+            bonuses += len(avail[i]["bonuses"])
 
     physical_spread = max_physical - min_physical
     magic_spread = max_magic - min_magic
-    return max(physical_spread, magic_spread) * (1 + 2 * skill_need_constraints)
+    return max(physical_spread, magic_spread) * (1 + 2 * bonuses)
 
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment):
     global required_attrs
@@ -857,10 +1192,10 @@ def combination_sig(combination):
             assignment_split = assignment_key_splits[assignment]
             assigned_character_name = assignment_split[0]
             if character_name == assigned_character_name:
-                assigned_item_name = combination[assignment]["name"]
+                assign_item_name = combination[assignment]["name"]
                 if sig != "":
                     sig += ", "
-                sig += f"{character_name}: {assigned_item_name}"
+                sig += f"{character_name}: {assign_item_name}"
     return sig
 
 def apply_all_armor_combinations(type_group_i, characters, depth):
@@ -874,7 +1209,7 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
     for c_i in range(0, len(combinations)):
         combination = combinations[c_i]
         for assignment in combination:
-            assigned_item = combination[assignment]
+            assign_item = combination[assignment]
             assignment_split = assignment_key_splits[assignment]
             character_name = assignment_split[0]
             assigned_key = assignment_split[1]
@@ -884,10 +1219,14 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
                     if assigned_key in character:
                         item_name = character[assigned_key]["name"]
                         raise KeyError(f"{character_name} already has {assigned_key}: {item_name}")
-                    character[assigned_key] = assigned_item
-                    character["physical"] += assigned_item["physical"]
-                    character["magic"] += assigned_item["magic"]
-                    character["hp"] += assigned_item["hp"]
+                    character[assigned_key] = assign_item
+                    character["physical"] += assign_item["physical"]
+                    character["magic"] += assign_item["magic"]
+                    character["hp"] += assign_item["hp"]
+                    if "required_bonuses" in character and "bonuses" in assign_item:
+                        for bonus_name in assign_item["bonuses"]:
+                            if bonus_name in character["required_bonuses"]:
+                                character["required_bonuses"][bonus_name] -= assign_item["bonuses"][bonus_name]
                     found = True
             assert found
 
@@ -899,11 +1238,11 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
 
         if type_group_i < len(available_gear) - 1 and not is_dead_branch_armor(type_group_i + 1, characters):
             apply_all_armor_combinations(type_group_i + 1, characters, depth + 1)
-        else:
+        elif all_bonuses_satisfied(characters):
             evaluate_for_armor(characters)
 
         for assignment in combination:
-            assigned_item = combination[assignment]
+            assign_item = combination[assignment]
             assignment_split = assignment_key_splits[assignment]
             character_name = assignment_split[0]
             assigned_key = assignment_split[1]
@@ -911,9 +1250,13 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
             for character in characters:
                 if character["name"] == character_name:
                     del character[assigned_key]
-                    character["physical"] -= assigned_item["physical"]
-                    character["magic"] -= assigned_item["magic"]
-                    character["hp"] -= assigned_item["hp"]
+                    character["physical"] -= assign_item["physical"]
+                    character["magic"] -= assign_item["magic"]
+                    character["hp"] -= assign_item["hp"]
+                    if "required_bonuses" in character and "bonuses" in assign_item:
+                        for bonus_name in assign_item["bonuses"]:
+                            if bonus_name in character["required_bonuses"]:
+                                character["required_bonuses"][bonus_name] += assign_item["bonuses"][bonus_name]
                     found = True
             assert found
 
@@ -925,6 +1268,14 @@ def is_dead_branch_armor(min_type_group_i, characters):
     global cofactor_start_count
     global cofactor_threshold
     global cofactor_engaged
+    global dead_branch_armor_efficacy
+
+    dead_branch_armor_efficacy[1] += 1
+
+    dead = not can_satisfy_bonuses_armor(characters, min_type_group_i)
+    if dead:
+        dead_branch_armor_efficacy[0] += 1
+        return True
 
     if len(best_armor_solutions) == 0:
         return False
@@ -938,41 +1289,6 @@ def is_dead_branch_armor(min_type_group_i, characters):
         max_character_physical_cofactor_magic = max_character_magic
         max_character_magic_cofactor_physical = max_character_physical
 
-        if "required" in character:
-            for required_item_group in character["required"]:
-                required_count = required_item_group["count"]
-                count = 0
-                for required_item_type in required_item_group["of"]:
-                    if required_item_type != "ring":
-                        if required_item_type in character:
-                            assigned_item_name = character[required_item_type]["name"]
-                            for item_option in required_item_group["of"][required_item_type]:
-                                if assigned_item_name == item_option:
-                                    count += 1
-                                    break
-                    else:
-                        ring_options = required_item_group["of"]["ring"]
-                        ring_slots = ["ring1", "ring2"]
-                        for ring_slot in ring_slots:
-                            if ring_slot in character:
-                                assigned_item_name = character[ring_slot]["name"]
-                                for item_option in ring_options:
-                                    if assigned_item_name == item_option:
-                                        count += 1
-                                        break
-
-                if count < required_count:
-                    # See if items to satisfy that requirement remain available at or beyond min_type_group_i
-                    type_group_i = min_type_group_i
-                    while type_group_i < len(available_gear):
-                        if available_gear[type_group_i]["type"] in required_item_group["of"]:
-                            count += 1
-                        type_group_i += 1
-
-                if count < required_count:
-                    # That skill requirement cannot be satisfied, so this is a dead branch
-                    return True
-
         type_group_i = min_type_group_i
         while type_group_i < len(available_gear):
             type_group = available_gear[type_group_i]
@@ -983,16 +1299,20 @@ def is_dead_branch_armor(min_type_group_i, characters):
             best_type_magic_cofactor_physical = 0
 
             for combination in combinations:
+                combination_physical = 0
+                combination_magic = 0
                 for assignment in combination:
                     assignment_split = assignment_key_splits[assignment]
                     if assignment_split[0] == character_name:
-                        assigned_item = combination[assignment]
-                        if best_type_physical < assigned_item["physical"]:
-                            best_type_physical = assigned_item["physical"]
-                            best_type_physical_cofactor_magic = assigned_item["magic"]
-                        if best_type_magic < assigned_item["magic"]:
-                            best_type_magic = assigned_item["magic"]
-                            best_type_magic_cofactor_physical = assigned_item["physical"]
+                        assign_item = combination[assignment]
+                        combination_physical += assign_item["physical"]
+                        combination_magic += assign_item["magic"]
+                if best_type_physical < combination_physical:
+                    best_type_physical = combination_physical
+                    best_type_physical_cofactor_magic = combination_magic
+                if best_type_magic < combination_magic:
+                    best_type_magic = combination_magic
+                    best_type_magic_cofactor_physical = combination_physical
             max_character_physical += best_type_physical
             max_character_magic += best_type_magic
             max_character_physical_cofactor_magic += best_type_physical_cofactor_magic
@@ -1000,8 +1320,10 @@ def is_dead_branch_armor(min_type_group_i, characters):
             type_group_i += 1
 
         if max_character_physical < best_min:
+            dead_branch_armor_efficacy[0] += 1
             return True
         if max_character_magic < best_min:
+            dead_branch_armor_efficacy[0] += 1
             return True
 
         if total_solution_refinements > cofactor_start_count:
@@ -1009,14 +1331,58 @@ def is_dead_branch_armor(min_type_group_i, characters):
                 if not cofactor_engaged:
                     cofactor_engaged = True
                     print("is_dead_branch_armor cofactor evaluation is now active")
+                dead_branch_armor_efficacy[0] += 1
                 return True
             if max_character_magic_cofactor_physical < best_min * cofactor_threshold:
                 if not cofactor_engaged:
                     cofactor_engaged = True
                     print("is_dead_branch_armor cofactor evaluation is now active")
+                dead_branch_armor_efficacy[0] += 1
                 return True
 
     return False
+
+def can_satisfy_bonuses_armor(characters, min_type_group_i):
+    global available_gear
+
+    for character in characters:
+        if "required_bonuses" in character:
+            for bonus_name in character["required_bonuses"]:
+                need = character["required_bonuses"][bonus_name]
+                if need > 0:
+                    character_name = character["name"]
+                    max_character_bonus = 0
+                    type_group_i = min_type_group_i
+                    while type_group_i < len(available_gear) and need > 0:
+                        type_group = available_gear[type_group_i]
+                        combinations = type_group["combinations"]
+                        best_type_bonus = 0
+                        for combination in combinations:
+                            combination_bonus = 0
+                            for assignment in combination:
+                                assignment_split = assignment_key_splits[assignment]
+                                if assignment_split[0] == character_name:
+                                    assign_item = combination[assignment]
+                                    if "bonuses" in assign_item and bonus_name in assign_item["bonuses"]:
+                                        combination_bonus += assign_item["bonuses"][bonus_name]
+                            if best_type_bonus < combination_bonus:
+                                best_type_bonus = combination_bonus
+
+                        max_character_bonus += best_type_bonus
+                        type_group_i += 1
+
+                    if max_character_bonus < need:
+                        # That skill requirement cannot be satisfied, so this is a dead branch
+                        return False
+    return True
+
+def all_bonuses_satisfied(characters):
+    for character in characters:
+        if "required_bonuses" in character:
+            for bonus_name in character["required_bonuses"]:
+                if character["required_bonuses"][bonus_name] > 0:
+                    return False
+    return True
 
 def evaluate_for_armor(characters):
     global start_time
