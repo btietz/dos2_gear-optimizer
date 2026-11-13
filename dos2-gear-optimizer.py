@@ -776,7 +776,6 @@ def main():
             count = len(type_group["combinations"])
             print(f"Number of armor combinations for {type_name}: {count}")
             combinations = type_group["combinations"]
-            strip_duplicate_combinations(combinations)
             for i in range(0, len(combinations)):
                 print(f"#{i+1}: {combinations[i]}")
             print("\n")
