@@ -14,8 +14,8 @@ characters = [
      "intelligence": 11,
 
      "physical": 148,
-     "magic": 173,
-     "hp": 630,
+     "magic": 100,
+     "hp": 536,
 
      "ring1": None,
 
@@ -28,12 +28,10 @@ characters = [
      "finesse": 11,
      "intelligence": 12,
 
-     "physical": 254,
-     "magic": 166,
-     "hp": 622,
+     "physical": 169,
+     "magic": 152,
+     "hp": 508,
 
-     "belt": None,
-     "boots": None,
      "ring1": None,
 
      "required_bonuses": {
@@ -43,31 +41,28 @@ characters = [
     {"name": "Lohse",
      "strength": 11,
      "finesse": 13,
-     "intelligence": 17,
+     "intelligence": 14,
 
-     "physical": 10,
-     "magic": 170,
-     "hp": 626,
+     "physical": 0,
+     "magic": 43,
+     "hp": 567,
 
-     "helmet": None,
-     "necklace": None,
      "ring1": None,
     },
     {"name": "Fane",
      "strength": 11,
      "finesse": 13,
-     "intelligence": 16,
+     "intelligence": 14,
 
-     "physical": 21,
-     "magic": 188,
-     "hp": 637,
+     "physical": 0,
+     "magic": 28,
+     "hp": 538,
 
-     "chest": None,
-     "helmet": None,
      "ring1": None,
 
      "required_bonuses": {
          "hydrosophist": 1,
+         "necromancer": 1,
          "loremaster": 1,
      },
     },
@@ -96,17 +91,16 @@ available_gear = [
              "necromancer": 1,
          },
         },
-        # Pre-assign to Lohse
-        #{"name": "MH1",
-        # "physical": 10,
-        # "magic": 44,
-        # "hp": 0,
-        # "intelligence": 12,
-        # "bonuses" : {
-        #     "huntsman": 1,
-        #     "pyrokinetic": 1,
-        # },
-        #},
+        {"name": "MH1",
+         "physical": 10,
+         "magic": 44,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "huntsman": 1,
+             "pyrokinetic": 1,
+         },
+        },
         {"name": "MMH1",
          "physical": 25,
          "magic": 16,
@@ -117,17 +111,16 @@ available_gear = [
              "summoning": 1,
          },
         },
-        # Pre-assign to Fane
-        #{"name": "BoI",
-        # "physical": 7,
-        # "magic": 30,
-        # "hp": 0,
-        # "intelligence": 12,
-        # "bonuses" : {
-        #     "hydrosophist": 1,
-        #     "aerothurge": 1,
-        # },
-        #},
+        {"name": "BoI",
+         "physical": 7,
+         "magic": 30,
+         "hp": 0,
+         "intelligence": 12,
+         "bonuses" : {
+             "hydrosophist": 1,
+             "aerothurge": 1,
+         },
+        },
         {"name": "MH2",
          "physical": 7,
          "magic": 28,
@@ -163,16 +156,15 @@ available_gear = [
          "hp": 0,
          "intelligence": 12,
         },
-        # Pre-assign to Fane
-        #{"name": "DD",
-        # "physical": 14,
-        # "magic": 93,
-        # "hp": 29,
-        # "intelligence": 12,
-        # "bonuses" : {
-        #     "necromancer": 1,
-        # },
-        #},
+        {"name": "DD",
+         "physical": 14,
+         "magic": 93,
+         "hp": 29,
+         "intelligence": 12,
+         "bonuses" : {
+             "necromancer": 1,
+         },
+        },
         {"name": "CoC",
          "physical": 16,
          "magic": 83,
@@ -299,12 +291,11 @@ available_gear = [
          "magic": 0,
          "hp": 15,
         },
-        # Pre-assign to The Red Prince
-        #{"name": "SS",
-        # "physical": 18,
-        # "magic": 0,
-        # "hp": 72,
-        #},
+        {"name": "SS",
+         "physical": 18,
+         "magic": 0,
+         "hp": 72,
+        },
      ]
     },
     {"type": "pants",
@@ -367,13 +358,12 @@ available_gear = [
     },
     {"type": "boots",
      "avail": [
-        # Pre-assign to The Red Prince
-        #{"name": "BSB",
-        # "physical": 67,
-        # "magic": 14,
-        # "hp": 42,
-        # "strength": 12,
-        #},
+        {"name": "BSB",
+         "physical": 67,
+         "magic": 14,
+         "hp": 42,
+         "strength": 12,
+        },
         {"name": "S",
          "physical": 46,
          "magic": 10,
@@ -434,15 +424,14 @@ available_gear = [
              "loremaster": 1,
          },
         },
-        # Pre-assign to Lohse
-        #{"name": "P",
-        # "physical": 0,
-        # "magic": 83,
-        # "hp": 59,
-        # "bonuses" : {
-        #     "huntsman": 1,
-        # },
-        #},
+        {"name": "P",
+         "physical": 0,
+         "magic": 83,
+         "hp": 59,
+         "bonuses" : {
+             "huntsman": 1,
+         },
+        },
         {"name": "MA",
          "physical": 0,
          "magic": 42,
@@ -481,24 +470,22 @@ available_gear = [
     },
     {"type": "ring",
      "avail": [
-        # Pre-assign to Brian
-        #{"name": "BS",
-        # "physical": 0,
-        # "magic": 87,
-        # "hp": 122,
-        # "bonuses" : {
-        #     "necromancer": 1,
-        # },
-        #},
-        # Pre-assign to Fane
-        #{"name": "SR1",
-        # "physical": 0,
-        # "magic": 45,
-        # "hp": 70,
-        # "bonuses" : {
-        #     "scoundrel": 1,
-        # },
-        #},
+        {"name": "BS",
+         "physical": 0,
+         "magic": 87,
+         "hp": 122,
+         "bonuses" : {
+             "necromancer": 1,
+         },
+        },
+        {"name": "SR1",
+         "physical": 0,
+         "magic": 45,
+         "hp": 70,
+         "bonuses" : {
+             "scoundrel": 1,
+         },
+        },
         # Pre-assign to Lohse
         #{"name": "ER",
         # "physical": 0,
@@ -524,15 +511,16 @@ available_gear = [
         #     "necromancer": 1,
         # },
         #},
-        {"name": "DR",
-         "physical": 0,
-         "magic": 28,
-         "hp": 0,
-         "bonuses" : {
-             "scoundrel": 1,
-             "hydrosophist": 1,
-         },
-        },
+        # Pre-assign to Fane
+        #{"name": "DR",
+        # "physical": 0,
+        # "magic": 28,
+        # "hp": 0,
+        # "bonuses" : {
+        #     "scoundrel": 1,
+        #     "hydrosophist": 1,
+        # },
+        #},
         {"name": "HR2",
          "physical": 0,
          "magic": 28,
@@ -574,14 +562,15 @@ available_gear = [
          "magic": 15,
          "hp": 34,
         },
-        {"name": "KP",
-         "physical": 0,
-         "magic": 14,
-         "hp": 28,
-         "bonuses" : {
-             "pyrokinetic": 2,
-         },
-        },
+        # Pre-assign to Brian
+        #{"name": "KP",
+        # "physical": 0,
+        # "magic": 14,
+        # "hp": 28,
+        # "bonuses" : {
+        #     "pyrokinetic": 2,
+        # },
+        #},
         {"name": "FiF",
          "physical": 0,
          "magic": 11,
@@ -623,6 +612,7 @@ cofactor_threshold = 0.949
 cofactor_engaged = False
 assignment_key_splits = {}
 debug_depth = 0
+best_hp_solutions_last_print_time = 0
 dead_branch_armor_efficacy = [0,0]
 
 start_time = time.time()
@@ -749,14 +739,7 @@ def main():
                     raise KeyError(f"{type_name}: {item_name} missing {key}") 
 
     print("\nEvaluating HP solutions\n")
-    best_hp_solutions.add({
-        "characters": copy.deepcopy(characters),
-        "available_gear": copy.deepcopy(available_gear),
-        "min_hp": calculate_min_hp(characters),
-        "gen#": total_permutations,
-    })
-    hp_solution_sigs = set()
-    build_all_hp_solutions(characters, available_gear, hp_solution_sigs, 0)
+    build_all_hp_solutions()
     limit_best_hp_solutions(max_best_solutions, None)
 
     for hp_i in range(0, len(best_hp_solutions)):
@@ -812,96 +795,81 @@ def main():
                 print(f"{item_type}: {item_name}, {physical}, {magic}, {hp}")
             print("\n")
 
-def build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth):
-    global required_attrs
-    global total_permutations
-    global debug_depth
+def build_all_hp_solutions():
+    global characters
+    global available_gear
 
-    for type_group_i in range(0, len(available_gear)):
-        type_group = available_gear[type_group_i]
+    for type_group in available_gear:
         type_name = type_group["type"]
-        avail = type_group["avail"]
-        for avail_i in range(0, len(avail)):
-            assign_item = avail[avail_i]
-            if assign_item["hp"] == 0 and not can_help_bonus(assign_item, characters):
-                # This item does not contribute to HP or bonuses, so skip it
-                continue
+        type_group["combinations"] = []
+        print(f"Building hp combinations for {type_name}")
+        build_all_hp_combinations(type_group, type_name, 0, characters, {}, set())
+        count = len(type_group["combinations"])
+        print(f"Number of HP combinations for {type_name}: {count}")
+        combinations = type_group["combinations"]
+        for i in range(0, len(combinations)):
+            print(f"#{i+1}: {combinations[i]}")
+        print("\n")
 
-            for character in characters:
-                if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
-                    continue
-                character_name = character["name"]
-                if "characters" in assign_item and not character_name in assign_item["characters"]:
-                    continue
-                item_char_possible_assignment = True
-                for attr in required_attrs:
-                    if attr in assign_item:
-                        if character[attr] < assign_item[attr]:
-                            item_char_possible_assignment = False
-                            break
-                if not item_char_possible_assignment:
-                    continue
+    apply_all_hp_combinations(0, characters, 0, available_gear)
 
-                if assign_item["hp"] == 0 and not can_help_bonus_single_character(assign_item, character):
-                    continue
+def build_all_hp_combinations(type_group, type_name, assign_item_i, characters, partial_assignment, sigs):
+    global required_attrs
+    global assignment_key_splits
 
-                if type_name != "ring":
-                    assigned_key = type_name
-                else:
-                    if not "ring1" in character:
-                        assigned_key = "ring1"
-                    else:
-                        assert not "ring2" in character
-                        assigned_key = "ring2"
+    avail = type_group["avail"]
+    assert assign_item_i < len(avail)
+    assign_item = avail[assign_item_i]
 
-                character[assigned_key] = assign_item
-                character["hp"] += assign_item["hp"]
-                character["physical"] += assign_item["physical"]
-                character["magic"] += assign_item["magic"]
-                if "required_bonuses" in character and "bonuses" in assign_item:
-                    for bonus_name in assign_item["bonuses"]:
-                        if bonus_name in character["required_bonuses"]:
-                            character["required_bonuses"][bonus_name] -= assign_item["bonuses"][bonus_name]
-                avail.pop(avail_i)
-                if len(avail) == 0:
-                    available_gear.pop(type_group_i)
-
-                sig = characters_sig(characters)
-                if not sig in hp_solution_sigs:
-                    total_permutations += 1
-                    hp_solution_sigs.add(sig)
-
-                    if depth <= debug_depth:
-                        elapsed_time = time.time() - start_time
-                        item_name = assign_item["name"]
-                        print(f"HP: d={depth} t={elapsed_time:.8f} n={total_permutations} applying {type_name}: "
-                              f"{item_name} to {character_name}")
-
-                    evaluate_for_hp(characters, available_gear, depth)
-                    build_all_hp_solutions(characters, available_gear, hp_solution_sigs, depth + 1)
-
-                if len(avail) == 0:
-                    available_gear.insert(type_group_i, type_group)
-                avail.insert(avail_i, assign_item)
-                character["hp"] -= assign_item["hp"]
-                character["physical"] -= assign_item["physical"]
-                character["magic"] -= assign_item["magic"]
-                if "required_bonuses" in character and "bonuses" in assign_item:
-                    for bonus_name in assign_item["bonuses"]:
-                        if bonus_name in character["required_bonuses"]:
-                            character["required_bonuses"][bonus_name] += assign_item["bonuses"][bonus_name]
-                del character[assigned_key]
-
-def can_help_bonus(assign_item, characters):
     for character in characters:
-        if "required_bonuses" in character:
-            for bonus_name in character["required_bonuses"]:
-                if character["required_bonuses"][bonus_name] > 0:
-                    if "bonuses" in assign_item and bonus_name in assign_item["bonuses"]:
-                        return True
-    return False
+        if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+            continue
+        character_name = character["name"]
+        if "characters" in assign_item and not character_name in assign_item["characters"]:
+            continue
+        item_char_possible_assignment = True
+        for attr in required_attrs:
+            if attr in assign_item:
+                if character[attr] < assign_item[attr]:
+                    item_char_possible_assignment = False
+                    break
+        if not item_char_possible_assignment:
+            continue
+        if assign_item["hp"] == 0 and not can_help_bonus(assign_item, character):
+            continue
 
-def can_help_bonus_single_character(assign_item, character):
+        if type_name != "ring":
+            assigned_key = type_name
+        else:
+            if "ring1" in character:
+                assigned_key = "ring2"
+            else:
+                assigned_key = "ring1"
+
+        character[assigned_key] = assign_item
+
+        new_assignments = copy.copy(partial_assignment)
+        assignment_key = f"{character_name} : {assigned_key}"
+        new_assignments[assignment_key] = assign_item
+        assignment_key_splits[assignment_key] = [character_name, assigned_key]
+        sig = combination_sig(new_assignments)
+        if not sig in sigs:
+            sigs.add(sig)
+            if any_assignable_gear(type_name, avail, assign_item_i + 1, characters):
+                # That's a partial combination
+                build_all_hp_combinations(type_group, type_name, assign_item_i + 1, characters, new_assignments, sigs)
+            else:
+                type_group["combinations"].append(new_assignments)
+
+        del character[assigned_key]
+
+    if assign_item_i < len(avail) - 1:
+        # This part skips assigning the item at assign_item_i, even if it could be (and was already tried), moving on to
+        # the next item for all characters.
+        build_all_hp_combinations(type_group, type_name, assign_item_i + 1, characters, copy.copy(partial_assignment),
+                                  sigs)
+
+def can_help_bonus(assign_item, character):
     if "required_bonuses" in character:
         for bonus_name in character["required_bonuses"]:
             if character["required_bonuses"][bonus_name] > 0:
@@ -909,62 +877,123 @@ def can_help_bonus_single_character(assign_item, character):
                     return True
     return False
 
-def characters_sig(characters):
-    global required_attrs
+def combination_sig(combination):
+    global assignment_key_splits
 
     sig = ""
     for character in characters:
         character_name = character["name"]
-        if sig == "":
-            sig += f"{character_name}::"
-        else:
-            sig += f";{character_name}::"
-
-        keys = sorted(character)
-        ring1 = None
-
-        if "ring1" in character and character["ring1"] != None:
-            ring1 = character["ring1"]["name"]
-
-        ring2 = None
-        if "ring2" in character and character["ring2"] != None:
-            ring2 = character["ring2"]["name"]
-
-        if ring1 == None and ring2 != None:
-            ring1 = ring2
-            ring2 = None
-
-        if ring1 != None and ring2 != None:
-            if ring2 < ring1:
-                temp = ring1
-                ring1 = ring2
-                ring2 = temp
-
-        for key in keys:
-            if key in set(["name", "physical", "magic", "hp", "required_bonuses"]) or key in required_attrs:
-                continue
-            item = character[key]
-            if item == None:
-                continue
-            item_name = item["name"]
-
-            if key == "ring1" or key == "ring2":
-
-                if ring1 != None:
-                    key = "ring1"
-                    item_name = ring1
-                    ring1 = None
-                else:
-                    assert ring2 != None
-                    key = "ring2"
-                    item_name = ring2
-                    ring2 = None
-
-            if sig[-2:] != "::":
-                sig += ","
-            sig += f"{key}:{item_name}"
-    assert sig != ""
+        sorted_assignments = sorted(combination)
+        for assignment in sorted_assignments:
+            assignment_split = assignment_key_splits[assignment]
+            assigned_character_name = assignment_split[0]
+            if character_name == assigned_character_name:
+                assign_item_name = combination[assignment]["name"]
+                if sig != "":
+                    sig += ", "
+                sig += f"{character_name}: {assign_item_name}"
     return sig
+
+def any_assignable_gear(type_name, avail, min_item_i, characters):
+    global required_attrs
+
+    while min_item_i < len(avail):
+        assign_item = avail[min_item_i]
+
+        for character in characters:
+            if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
+                continue
+            if "characters" in assign_item and not character["name"] in assign_item["characters"]:
+                continue
+            item_char_possible_assignment = True
+            for attr in required_attrs:
+                if attr in assign_item:
+                    if character[attr] < assign_item[attr]:
+                        item_char_possible_assignment = False
+                        break
+            if item_char_possible_assignment:
+                return True
+
+        min_item_i += 1
+    return False
+
+def apply_all_hp_combinations(type_group_i, characters, depth, available_gear):
+    global assignment_key_splits
+    global total_permutations
+    global debug_depth
+
+    combinations = available_gear[type_group_i]["combinations"]
+
+    for c_i in range(0, len(combinations)):
+        combination = combinations[c_i]
+        for assignment in combination:
+            assign_item = combination[assignment]
+            assignment_split = assignment_key_splits[assignment]
+            character_name = assignment_split[0]
+            assigned_key = assignment_split[1]
+            found = False
+            for character in characters:
+                if character["name"] == character_name:
+                    if assigned_key in character:
+                        item_name = character[assigned_key]["name"]
+                        raise KeyError(f"{character_name} already has {assigned_key}: {item_name}")
+                    character[assigned_key] = assign_item
+                    character["physical"] += assign_item["physical"]
+                    character["magic"] += assign_item["magic"]
+                    character["hp"] += assign_item["hp"]
+                    if "required_bonuses" in character and "bonuses" in assign_item:
+                        for bonus_name in assign_item["bonuses"]:
+                            if bonus_name in character["required_bonuses"]:
+                                character["required_bonuses"][bonus_name] -= assign_item["bonuses"][bonus_name]
+                    found = True
+                    break
+            assert found
+
+            avail = available_gear[type_group_i]["avail"]
+            found = False
+            for avail_i in range(0, len(avail)):
+                if assign_item == avail[avail_i]:
+                    avail.pop(avail_i)
+                    found = True
+                    break
+            assert found
+
+        total_permutations += 1
+        if depth <= debug_depth:
+            elapsed_time = time.time() - start_time
+            print(f"H: d={depth} c={c_i+1}/{len(combinations)} t={elapsed_time:.8f} n={total_permutations} applying "
+                  f"combination {combination}")
+
+        if type_group_i < len(available_gear) - 1:
+            apply_all_hp_combinations(type_group_i + 1, characters, depth + 1, available_gear)
+
+        evaluate_for_hp(characters, available_gear, depth)
+
+        for assignment in combination:
+            assign_item = combination[assignment]
+            assignment_split = assignment_key_splits[assignment]
+            character_name = assignment_split[0]
+            assigned_key = assignment_split[1]
+            found = False
+            for character in characters:
+                if character["name"] == character_name:
+                    del character[assigned_key]
+                    character["physical"] -= assign_item["physical"]
+                    character["magic"] -= assign_item["magic"]
+                    character["hp"] -= assign_item["hp"]
+                    if "required_bonuses" in character and "bonuses" in assign_item:
+                        for bonus_name in assign_item["bonuses"]:
+                            if bonus_name in character["required_bonuses"]:
+                                character["required_bonuses"][bonus_name] += assign_item["bonuses"][bonus_name]
+                    found = True
+                    break
+            assert found
+
+            avail = available_gear[type_group_i]["avail"]
+            avail.append(assign_item)
+
+    if len(combinations) == 0 and type_group_i < len(available_gear) - 1:
+        apply_all_hp_combinations(type_group_i + 1, characters, depth + 1, available_gear)
 
 def evaluate_for_hp(characters, available_gear, depth):
     global start_time
@@ -975,16 +1004,29 @@ def evaluate_for_hp(characters, available_gear, depth):
     if not bonuses_satisfied(characters):
         return
 
-    existing_best_min = best_hp_solutions[-1]["min_hp"]
     new_min = calculate_min_hp(characters)
+    if len(best_hp_solutions) > 0:
+        existing_best_min = best_hp_solutions[-1]["min_hp"]
+    else:
+        existing_best_min = 0
 
     if new_min > existing_best_min * best_hp_solutions_tolerance:
+        # We don't need to copy "combinations" along with available_gear, and that's a big memory footprint
+        temp = []
+        for i in range(0, len(available_gear)):
+            temp.append(available_gear[i]["combinations"])
+            del available_gear[i]["combinations"]
+
         best_hp_solutions.add({
             "characters": copy.deepcopy(characters),
             "available_gear": copy.deepcopy(available_gear),
             "min_hp": calculate_min_hp(characters),
             "gen#": total_permutations,
         })
+
+        for i in range(0, len(available_gear)):
+            available_gear[i]["combinations"] = temp[i]
+
         limit_best_hp_solutions(max_temp_hp_solutions, depth)
         if new_min > existing_best_min:
             elapsed_time = time.time() - start_time
@@ -1012,6 +1054,10 @@ def limit_best_hp_solutions(limit, depth):
     global best_hp_solutions
     global total_permutations
     global debug_depth
+    global best_hp_solutions_last_print_time
+
+    if len(best_hp_solutions) == 0:
+        return
 
     existing_best_min = best_hp_solutions[-1]["min_hp"]
 
@@ -1045,7 +1091,10 @@ def limit_best_hp_solutions(limit, depth):
                 else:
                     cut_range_high_i = cut_range_mid_i
 
-    if depth != None and depth <= debug_depth:
+    now = time.time()
+    if (depth != None and depth <= debug_depth) or best_hp_solutions_last_print_time + 20 < now:
+        best_hp_solutions_last_print_time = now
+
         value = best_hp_solutions[0]["min_hp"]
         values = f"{value}"
         if len(best_hp_solutions) < 9:
@@ -1151,46 +1200,6 @@ def build_all_armor_combinations(type_group, type_name, assign_item_i, character
         build_all_armor_combinations(type_group, type_name, assign_item_i + 1, characters,
                                      copy.copy(partial_assignment), sigs)
 
-def combination_sig(combination):
-    global assignment_key_splits
-
-    sig = ""
-    for character in characters:
-        character_name = character["name"]
-        sorted_assignments = sorted(combination)
-        for assignment in sorted_assignments:
-            assignment_split = assignment_key_splits[assignment]
-            assigned_character_name = assignment_split[0]
-            if character_name == assigned_character_name:
-                assign_item_name = combination[assignment]["name"]
-                if sig != "":
-                    sig += ", "
-                sig += f"{character_name}: {assign_item_name}"
-    return sig
-
-def any_assignable_gear(type_name, avail, min_item_i, characters):
-    global required_attrs
-
-    while min_item_i < len(avail):
-        assign_item = avail[min_item_i]
-
-        for character in characters:
-            if type_name in character or (type_name == "ring" and ("ring1" in character and "ring2" in character)):
-                continue
-            if "characters" in assign_item and not character["name"] in assign_item["characters"]:
-                continue
-            item_char_possible_assignment = True
-            for attr in required_attrs:
-                if attr in assign_item:
-                    if character[attr] < assign_item[attr]:
-                        item_char_possible_assignment = False
-                        break
-            if item_char_possible_assignment:
-                return True
-
-        min_item_i += 1
-    return False
-
 def apply_all_armor_combinations(type_group_i, characters, depth):
     global available_gear
     global assignment_key_splits
@@ -1244,6 +1253,9 @@ def apply_all_armor_combinations(type_group_i, characters, depth):
                     character["hp"] -= assign_item["hp"]
                     found = True
             assert found
+
+    if len(combinations) == 0 and type_group_i < len(available_gear) - 1:
+        apply_all_armor_combinations(type_group_i + 1, characters, depth + 1)
 
 def is_dead_branch_armor(min_type_group_i, characters):
     global best_armor_solutions
