@@ -600,6 +600,7 @@ best_hp_solutions = sortedcontainers.SortedList(key=lambda s: (s["min_hp"], s["g
 #   ]
 best_hp_solutions_tolerance = 0.85
 max_temp_hp_solutions = 2000
+hp_skill_bonuses_by_gear_type = {}
 best_armor_solutions = [
     # characters arrays
 ]
@@ -746,7 +747,7 @@ def main():
         print(f"\nEvaluating armor for HP solution {hp_i+1}/{len(best_hp_solutions)}\n")
         hp_solution = best_hp_solutions[hp_i]
         available_gear = hp_solution["available_gear"]
-        available_gear.sort(key=lambda s: gear_armor_value_spread_and_constraints(s), reverse=True)
+        available_gear.sort(key=lambda s: gear_armor_value_spread(s), reverse=True)
         characters = hp_solution["characters"]
 
         print(f"Starting assignments from HP solution:\n{characters}\n")
@@ -799,6 +800,8 @@ def build_all_hp_solutions():
     global characters
     global available_gear
 
+    available_gear.sort(key=lambda s: num_skill_bonuses(s), reverse=True)
+
     for type_group in available_gear:
         type_name = type_group["type"]
         type_group["combinations"] = []
@@ -811,7 +814,57 @@ def build_all_hp_solutions():
             print(f"#{i+1}: {combinations[i]}")
         print("\n")
 
+    calculate_max_gear_type_skill_bonuses()
+
     apply_all_hp_combinations(0, characters, 0, available_gear)
+
+def num_skill_bonuses(gear_type):
+    global characters
+
+    num_skill_bonuses = 0
+    for character in characters:
+        if "required_bonuses" in character:
+            for bonus_name in character["required_bonuses"]:
+                assert character["required_bonuses"][bonus_name] > 0
+                for item in gear_type["avail"]:
+                    if "bonuses" in item and bonus_name in item["bonuses"]:
+                        assert item["bonuses"][bonus_name] > 0
+                        num_skill_bonuses += 1
+
+    return num_skill_bonuses
+
+def calculate_max_gear_type_skill_bonuses():
+    global characters
+    global available_gear
+    global hp_skill_bonuses_by_gear_type
+
+    for character in characters:
+        if "required_bonuses" in character:
+            for bonus_name in character["required_bonuses"]:
+                bonus = 0
+                ag_i = len(available_gear) - 1
+                while ag_i > 0:
+                    type_group = available_gear[ag_i] 
+                    type_name = type_group["type"]
+                    max_bonus = 0
+                    for combination in type_group["combinations"]:
+                        combination_bonus = 0
+                        for assignment in combination:
+                            assign_item = combination[assignment]
+                            assignment_split = assignment_key_splits[assignment]
+                            character_name = assignment_split[0]
+                            if character["name"] == character_name:
+                                if "bonuses" in assign_item and bonus_name in assign_item["bonuses"]:
+                                    # Plus equals because there might be more than one ring
+                                    combination_bonus += assign_item["bonuses"][bonus_name]
+
+                        if max_bonus < combination_bonus:
+                            max_bonus = combination_bonus
+                    bonus += max_bonus
+                    character_name = character["name"]
+                    hp_skill_bonuses_by_gear_type[f"{character_name}: {type_name}: {bonus_name}"] = bonus
+
+                    ag_i -= 1
 
 def build_all_hp_combinations(type_group, type_name, assign_item_i, characters, partial_assignment, sigs):
     global required_attrs
@@ -964,7 +1017,7 @@ def apply_all_hp_combinations(type_group_i, characters, depth, available_gear):
             print(f"H: d={depth} c={c_i+1}/{len(combinations)} t={elapsed_time:.8f} n={total_permutations} applying "
                   f"combination {combination}")
 
-        if type_group_i < len(available_gear) - 1:
+        if (type_group_i < len(available_gear) - 1 and not is_dead_branch_hp(characters, type_group_i + 1)):
             apply_all_hp_combinations(type_group_i + 1, characters, depth + 1, available_gear)
 
         evaluate_for_hp(characters, available_gear, depth)
@@ -994,6 +1047,21 @@ def apply_all_hp_combinations(type_group_i, characters, depth, available_gear):
 
     if len(combinations) == 0 and type_group_i < len(available_gear) - 1:
         apply_all_hp_combinations(type_group_i + 1, characters, depth + 1, available_gear)
+
+def is_dead_branch_hp(characters, type_group_i):
+    global available_gear
+    global hp_skill_bonuses_by_gear_type
+
+    for character in characters:
+        if "required_bonuses" in character:
+            character_name = character["name"]
+            for bonus_name in character["required_bonuses"]:
+                need = character["required_bonuses"][bonus_name]
+                type_name = available_gear[type_group_i]["type"]
+                if need > hp_skill_bonuses_by_gear_type[f"{character_name}: {type_name}: {bonus_name}"]:
+                    return True
+
+    return False
 
 def evaluate_for_hp(characters, available_gear, depth):
     global start_time
@@ -1115,7 +1183,7 @@ def limit_best_hp_solutions(limit, depth):
         print(f"best_hp_solutions: d={depth} count={len(best_hp_solutions)}, n={total_permutations} "
               f"t={elapsed_time:.8f}: [{values}]")
 
-def gear_armor_value_spread_and_constraints(type_group):
+def gear_armor_value_spread(type_group):
     global characters
 
     avail = type_group["avail"]
@@ -1126,7 +1194,6 @@ def gear_armor_value_spread_and_constraints(type_group):
     min_magic = avail[0]["magic"]
     max_magic = min_magic
 
-    bonuses = 0
     for i in range(1, len(avail)):
         physical = avail[i]["physical"]
         if min_physical > physical:
@@ -1138,12 +1205,10 @@ def gear_armor_value_spread_and_constraints(type_group):
             min_magic = magic
         if max_magic < magic:
             max_magic = magic
-        if "bonuses" in avail[i]:
-            bonuses += len(avail[i]["bonuses"])
 
     physical_spread = max_physical - min_physical
     magic_spread = max_magic - min_magic
-    return max(physical_spread, magic_spread) * (1 + 2 * bonuses)
+    return max(physical_spread, magic_spread)
 
 def build_all_armor_combinations(type_group, type_name, assign_item_i, characters, partial_assignment, sigs):
     global required_attrs
